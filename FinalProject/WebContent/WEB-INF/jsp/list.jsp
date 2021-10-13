@@ -16,6 +16,7 @@
 </title>
 </head>
 <body>
+
 	<c:import url="fragment\header.jsp" charEncoding="utf-8"/>
 <fmt:bundle basename="resources.pagecontent" prefix="list.">
 	<div class="container">

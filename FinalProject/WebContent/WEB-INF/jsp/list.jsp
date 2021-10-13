@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <title>
+
 	<fmt:bundle basename="resources.pagecontent" prefix="list.">
 		<fmt:message key="products"/>
 	</fmt:bundle>

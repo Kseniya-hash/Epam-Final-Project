@@ -12,11 +12,12 @@
 <fmt:bundle basename="resources.pagecontent" prefix="product.">
 <c:import url="fragment\header.jsp" charEncoding="utf-8"/>
 <div class="container">
+	<h1><c:out value="${ product.name }"/><br/></h1>
 	<div class="row">
-		<div class="col-md-8">
-			<c:out value="${ product.name }"/><br/>
+		<div class="col-md-6">
+			<img src="${ product.photoPath }" class="img-fluid" alt="product photo">
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<c:choose>
 				<c:when test="${ user.role == 'admin' }">
 					<fmt:message key="sellingprice"/>
@@ -38,54 +39,52 @@
 					<fmt:message key="unavailable"/>
 				</c:otherwise>
 			</c:choose>
+			</br>
+			</br>
+			<fmt:message key="description"/><br/>
+			<c:out value="${ product.description }"/></br></br>
+			<c:if test="${ not empty product.weight }">
+				<div class="row">
+					<div class="col-md-4">
+						<fmt:message key="weight"/>
+					</div>
+					<div class="col-md-4">
+						<c:out value="${ product.weight }"/>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${ not empty product.length }">
+				<div class="row">
+					<div class="col-md-4">
+						<fmt:message key="length"/>
+					</div>
+					<div class="col-md-4">
+						<c:out value="${ product.length }"/>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${ not empty product.high }">
+				<div class="row">
+					<div class="col-md-4">
+						<fmt:message key="high"/>
+					</div>
+					<div class="col-md-4">
+						<c:out value="${ product.high }"/>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${ not empty product.width }">
+				<div class="row">
+					<div class="col-md-4">
+						<fmt:message key="width"/>
+					</div>
+					<div class="col-md-4">
+						<c:out value="${ product.width }"/>
+					</div>
+				</div>
+			</c:if>
 		</div>
 	</div>
-	<fmt:message key="description"/><br/>
-	<c:out value="${ product.description }"/></br></br>
-	<c:if test="${ not empty product.weight }">
-		<div class="row">
-			<div class="col-md-2">
-				<fmt:message key="weight"/>
-			</div>
-			<div class="col-md-3">
-				<c:out value="${ product.weight }"/>
-				<fmt:message key="gramm"/>
-			</div>
-		</div>
-	</c:if>
-	<c:if test="${ not empty product.length }">
-		<div class="row">
-			<div class="col-md-2">
-				<fmt:message key="length"/>
-			</div>
-			<div class="col-md-3">
-				<c:out value="${ product.length }"/>
-				<fmt:message key="sm"/>
-			</div>
-		</div>
-	</c:if>
-	<c:if test="${ not empty product.high }">
-		<div class="row">
-			<div class="col-md-2">
-				<fmt:message key="high"/>
-			</div>
-			<div class="col-md-3">
-				<c:out value="${ product.high }"/>
-				<fmt:message key="sm"/>
-			</div>
-		</div>
-	</c:if>
-	<c:if test="${ not empty product.width }">
-		<div class="row">
-			<div class="col-md-2">
-				<fmt:message key="width"/>
-			</div>
-			<div class="col-md-3">
-				<c:out value="${ product.width }"/>
-				<fmt:message key="sm"/>
-			</div>
-		</div>
-	</c:if>
 	<div class="row">
 		<div class="col-md-2">
 			<form name="addToCart" method="POST" action="Controller">
@@ -94,7 +93,7 @@
     				<button type="submit" 
     				class="btn btn-primary" 
     				name="product_id" 
-    				value = ${ product.id }><fmt:message key="addtocart"/></button>
+    				value = "${ product.id }"><fmt:message key="addtocart"/></button>
     		</form>
 		</div>
 	<c:if test="${ user.role == 'admin' }">
@@ -104,11 +103,54 @@
     			<button type="submit" 
     				class="btn btn-primary" 
     				name="product_id" 
-   					value = ${ product.id }><fmt:message key="redact"/></button>
+   					value = "${ product.id }"><fmt:message key="redact"/></button>
     		</form>
 		</div>
 	</c:if>
 	</div>
+	<hr>
+	
+	
+	<ul class="list-unstyled">
+		<c:forEach var = "comment" items="${ comments }">
+			<li class="media">
+				<div class="media-body">
+    				<h4 class="mt-0"><c:out value="${ comment.userLogin }"/>
+    				<c:forEach begin = "1" end = "${ comment.rating }">
+    					<img src="images/star.png" class="img-fluid" alt="${ comment.rating }">
+    				</c:forEach>
+    				</h4>
+   	 				<c:out value="${ comment.text }"/>
+  				</div>
+			</li>
+			<hr>
+		</c:forEach>
+	</ul>
+	
+	<c:if test="${ not empty user }">
+		<form name="AddComment" method="POST" action="Controller">
+			<input type = "hidden" name = "command" value = "create_comment">
+			<input type = "hidden" name = "csrf_tokin" value="${ csrf_tokin }">
+			<input type = "hidden" name = "product_id" value = "${ product.id }">
+			<c:forEach begin = "1" end = "5" varStatus="currentRating">
+				 <label class="form-check-label" for="comment_rating">
+				 	<c:out value = "${ currentRating.index }"/>
+				 </label>
+				 <input class="form-check form-check-inline" 
+				 type="radio" 
+				 name="comment_rating"
+				 value = "${ currentRating.index }">
+			</c:forEach>
+			<textarea class="form-control" name="comment_text"></textarea>
+			<br>
+			<button type="submit" class="btn btn-primary float-right btn-sm">Добавить комментарий</button>
+			<br>
+		</form>
+	</c:if>
+	
+	
+	
+	
 </div>
 <c:import url="fragment\footer.jsp" charEncoding="utf-8"/>
 </fmt:bundle>

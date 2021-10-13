@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import by.epamtc.dubovik.shop.entity.UserForLogin;
 import by.epamtc.dubovik.shop.entity.UserLogged;
 import by.epamtc.dubovik.shop.service.LoginService;
+import by.epamtc.dubovik.shop.service.UserService;
 import by.epamtc.dubovik.shop.service.exception.InvalidException;
 import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
@@ -26,7 +27,8 @@ public class LoginCommand implements ActionCommand {
 		byte[] password = request.getParameter(ParameterName.PASSWORD).getBytes();
 		UserForLogin unauthorized = new UserForLogin(login, password);
 		
-		LoginService loginService = ServiceFactory.getInstance().getLoginService(); 
+		UserService loginService = ServiceFactory.getInstance().getUserService();
+		//LoginService loginService = ServiceFactory.getInstance().getLoginService(); 
 		UserLogged user = null;
 		try {
 			user = loginService.authorize(unauthorized);
@@ -38,13 +40,15 @@ public class LoginCommand implements ActionCommand {
 		}
 
 		if(user != null) {
-			HttpSession session = request.getSession();
-			session.setAttribute(ParameterName.USER, user);
-			page = (String)session.getAttribute(ParameterName.PREVIOS_URL);
-			if (page == null) {
+			if(!user.getIsBlacklisted()) {
+				HttpSession session = request.getSession();
+				session.setAttribute(ParameterName.USER, user);
 				page = Page.INDEX;
+			} else {
+				request.setAttribute("errorLoginPassMessage", 
+						MessageManager.getProperty("message.empthyloginerror"));
 			}
-			page = Page.INDEX;
+			//page = Page.INDEX;
 		} else {
 			request.setAttribute("errorLoginPassMessage", 
 					MessageManager.getProperty("message.loginerror"));

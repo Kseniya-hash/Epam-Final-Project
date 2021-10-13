@@ -2,6 +2,7 @@
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -41,21 +42,27 @@
 			</div>
 		</div>
 		
+		</br>
+		</br>
 		<c:forEach var="elem" items="${ products }">
 			<div class="row">
-				<div class="col-md-10">
+				<div class="col-md-3">
+					<img src="${ elem.photoPath }" class="img-fluid" alt="product photo">
+				</div>
+				<div class="col-md-7">
 				
 					<c:url value ="Controller?command=show_product&product_id=${ elem.id }" var="productUrl"/>
 					<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ elem.name }"/></a><br/>
 					<c:out value="${ elem.productCategory }"/><br/>
-					<c:out value="${ elem.description }"/><br/>
-						<fmt:message key="comments"/>
+					<c:out value="${ fn:substring(elem.description, 0, 100)}..."/><br/>
+					<fmt:message key="comments"/>
 					<c:out value="${ elem.commentCount }"/><br/>
-						<fmt:message key="rating"/>
-					<c:out value="${ elem.rating }"/><br/>
+					<fmt:message key="rating"/>
+					<c:forEach begin = "1" end = "${ elem.rating }">
+    					<img src="images/star.png" class="img-fluid" alt="${ elem.rating }">
+    				</c:forEach><br/>
 						<fmt:message key="price"/>
 					<c:out value="${ elem.sellingPrice / 100 }"/><br/>
-					<hr/>
 				</div>
 				<div class="col-md-2">
     				</br>
@@ -68,6 +75,7 @@
     				</form>
 				</div>
 			</div>
+			<hr/>
 		</c:forEach>
 	</div>
 	<c:import url="fragment\footer.jsp" charEncoding="utf-8"/>

@@ -9,6 +9,7 @@ public class ProductForMenu extends Entity {
 	private int commentCount;
 	private int rating;
 	private int sellingPrice;
+	private String photoPath;
 	
 	public int getId() {
 		return id;
@@ -65,6 +66,14 @@ public class ProductForMenu extends Entity {
 	public void setSellingPrice(int sellingPrice) {
 		this.sellingPrice = sellingPrice;
 	}
+	
+	public String getPhotoPath() {
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -81,7 +90,8 @@ public class ProductForMenu extends Entity {
 			equalsWithNull(this.description, other.getDescription()) &&
 			this.commentCount == other.getCommentCount() &&
 			this.rating == other.getRating() &&
-			this.sellingPrice == other.getSellingPrice()) {
+			this.sellingPrice == other.getSellingPrice() &&
+			equalsWithNull(this.photoPath, other.getPhotoPath())) {
 			return true;
 		}
 		return false;
@@ -98,6 +108,7 @@ public class ProductForMenu extends Entity {
 		result = result * prime + commentCount;
 		result = result * prime + rating;
 		result = result * prime + sellingPrice;
+		result = result * prime + hashCodeWithNull(photoPath);
 		return result;
 	}
 
@@ -110,7 +121,8 @@ public class ProductForMenu extends Entity {
 		result.append(description + ",");
 		result.append(commentCount + ",");
 		result.append(rating + ",");
-		result.append(sellingPrice);
+		result.append(sellingPrice + ",");
+		result.append(photoPath);
 		return result.toString();
 	}
 }

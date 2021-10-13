@@ -9,8 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import by.epamtc.dubovik.shop.entity.Cart;
 import by.epamtc.dubovik.shop.service.CartService;
-import by.epamtc.dubovik.shop.service.exception.InvalidException;
-import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
 import by.epamtc.dubovik.shop.servlet.Page;
 import by.epamtc.dubovik.shop.servlet.ParameterName;

@@ -1,8 +1,6 @@
 package by.epamtc.dubovik.shop.servlet.filter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,10 +10,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import by.epamtc.dubovik.shop.entity.Cart;
+ 
 import by.epamtc.dubovik.shop.entity.UserLogged;
-import by.epamtc.dubovik.shop.service.security.SecurityConfig;
+import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
 import by.epamtc.dubovik.shop.service.util.RequestUtil;
 import by.epamtc.dubovik.shop.service.util.SecurityUtil;
 import by.epamtc.dubovik.shop.servlet.Page;
@@ -47,17 +44,19 @@ public class SecurityFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		
-		UserLogged loginedUser = RequestUtil.takeUserLogged(request);
+		RequestUtil requestUtil = ServiceFactory.getInstance().getRequestUtil();
+		SecurityUtil securityUtil = ServiceFactory.getInstance().getSecurityUtil();
+		UserLogged loginedUser = requestUtil.takeUserLogged(request);
 		
 		HttpServletRequest wrapRequest = request;
 		if (loginedUser != null) {
 			wrapRequest = new UserRoleRequestWrapper(request);
 		}
-		String command = RequestUtil.getCommand(wrapRequest);
+		String command = requestUtil.takeCommand(wrapRequest);
 		
-		if (SecurityConfig.isSecureCommand(command)) {
+		if (securityUtil.isProtectedCommand(request)) {
 			
-			boolean hasPermission = SecurityUtil.hasPermission(wrapRequest);
+			boolean hasPermission = securityUtil.hasPermission(wrapRequest);
 			if (!hasPermission) {
 				request.getRequestDispatcher(Page.LOGIN).forward(wrapRequest, response);
 				return;

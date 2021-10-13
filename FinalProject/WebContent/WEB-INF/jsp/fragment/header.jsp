@@ -43,7 +43,14 @@
 				</c:if>
 				<c:if test="${ user.role == 'admin' }">
 					<li class="nav-item">
-						<a class="nav-link" href="#"><fmt:message key="buyerorders"/></a>
+						<a class="nav-link" href="Controller?command=buyer_orders">
+							<fmt:message key="buyerorders"/>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="Controller?command=to_create_product">
+							Добавить товар
+						</a>
 					</li>
 				</c:if>
 				<li class="nav-item">
@@ -83,7 +90,11 @@
 </nav>
 
 <c:if test="${ not empty modal_message }">
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" 
+  id="modal" tabindex="-1" 
+  role="dialog" 
+  aria-labelledby="modalLabel" 
+  aria-hidden="true">
   	<div class="modal-dialog" role="document">
   	  <div class="modal-content">
         <div class="modal-body">
@@ -98,7 +109,7 @@
     </div>
   </div>
   <script type="text/javascript">
-	$('#exampleModal').modal('show');
+	$('#modal').modal('show');
   </script>
 </c:if>
 

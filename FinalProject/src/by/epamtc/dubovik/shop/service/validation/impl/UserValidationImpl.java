@@ -17,25 +17,26 @@ public class UserValidationImpl implements UserValidation {
 	
 	@Override
 	public boolean isValid(User user) {
-		boolean isValid = true;
-		if(user.getLogin() == null && user.getLogin().length() == 0) {
-			isValid = false;
-		}
-		if(!checkPassword(user.getPassword())) {
-			isValid = false;
-		}
-		if(!user.getPhone().matches(PHONE_REGEX)) {
-			isValid = false;
-		}
-		if(user.getName() == null && user.getName().length() == 0) {
-			isValid = false;
-		}
-		if(user.getEMail() != null && user.getEMail().length() != 0 && !user.getEMail().matches(E_MAIL_REGEX)) {
-			isValid = false;
+		boolean isValid = false;
+		if(user != null &&
+			user.getLogin() != null && user.getLogin().length() != 0 &&
+			checkPassword(user.getPassword()) &&
+			user.getPhone().matches(PHONE_REGEX) &&
+			user.getName() != null && user.getName().length() != 0 &&
+			isEmailValid(user.getEMail())) {
+			isValid = true;
 		}
 		return isValid;
 	}
 
+	private boolean isEmailValid(String email) {
+		boolean isValid = false;
+		if(email == null || (email.length() != 0 && email.matches(E_MAIL_REGEX))) {
+			isValid = true;
+		}
+		return isValid;
+	}
+	
 	private boolean checkPassword(byte[] password) {
 		return (new String(password)).matches(PASSWORD_REGEX);
 	}

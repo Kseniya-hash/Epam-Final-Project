@@ -30,10 +30,10 @@ public class UserDB implements UserDAO {
 			"DELETE FROM `dubovik_Shop`.`users` WHERE `u_id`=?";
 	private static final String SQL_DELETE_BY_ENTITY = 
 			"DELETE FROM `dubovik_Shop`.`users` "
-			+ "WHERE `u_id` = ? AND `unq_u_phone` = ? AND `unq_u_login` = ? AND `u_password` = ? "
+			+ "WHERE `u_id` = ? AND `u_phone` = ? AND `unq_u_login` = ? AND `u_password` = ? "
 			+ "AND `u_name` = ? AND `u_e-mail` = ? AND `u_is_blacklisted` = ? AND `u_r_id` = ?";
 	private static final String SQL_UPDATE = 
-			"UPDATE `dubovik_Shop`.`users` SET `unq_u_phone` = ?, `unq_u_login` = ?, `u_password` = ?"
+			"UPDATE `dubovik_Shop`.`users` SET `u_phone` = ?, `unq_u_login` = ?, `u_password` = ?"
 			+ ", `u_name` = ?, `u_e-mail` = ?, `u_is_blacklisted` = ?, `u_r_id` = ? "
 			+ "WHERE `u_id` = ?";
 	
@@ -53,14 +53,14 @@ public class UserDB implements UserDAO {
 		User user = null;
 		if (!resultSet.isAfterLast()) {
 			user = new User();
-			user.setId(resultSet.getInt(UserMapping.ID_COLUMN));
-			user.setPhone(resultSet.getString(UserMapping.PHONE_COLUMN));
-			user.setLogin(resultSet.getString(UserMapping.LOGIN_COLUMN));
-			user.setPassword(resultSet.getString(UserMapping.PASSWORD_COLUMN).getBytes());
-			user.setName(resultSet.getString(UserMapping.NAME_COLUMN));
-			user.setEMail(resultSet.getString(UserMapping.E_MAIL_COLUMN));
-			user.setIsBlacklisted(resultSet.getBoolean(UserMapping.BLACKLIST_COLUMN));
-			user.setRoleId(resultSet.getInt(UserMapping.ROLE_ID_COLUMN));
+			user.setId(resultSet.getInt(UserMapping.ID));
+			user.setPhone(resultSet.getString(UserMapping.PHONE));
+			user.setLogin(resultSet.getString(UserMapping.LOGIN));
+			user.setPassword(resultSet.getString(UserMapping.PASSWORD).getBytes());
+			user.setName(resultSet.getString(UserMapping.NAME));
+			user.setEMail(resultSet.getString(UserMapping.E_MAIL));
+			user.setIsBlacklisted(resultSet.getBoolean(UserMapping.BLACKLIST));
+			user.setRoleId(resultSet.getInt(UserMapping.ROLE_ID));
 		}
 		return user;
 	}
@@ -69,10 +69,10 @@ public class UserDB implements UserDAO {
 		UserLogged user = null;
 		if (!resultSet.isAfterLast()) {
 			user = new UserLogged();
-			user.setId(resultSet.getInt(UserMapping.ID_COLUMN));
-			user.setLogin(resultSet.getString(UserMapping.LOGIN_COLUMN));
-			user.setIsBlacklisted(resultSet.getBoolean(UserMapping.BLACKLIST_COLUMN));
-			user.setRole(resultSet.getString(RoleMapping.NAME_COLUMN));
+			user.setId(resultSet.getInt(UserMapping.ID));
+			user.setLogin(resultSet.getString(UserMapping.LOGIN));
+			user.setIsBlacklisted(resultSet.getBoolean(UserMapping.BLACKLIST));
+			user.setRole(resultSet.getString(RoleMapping.NAME));
 		}
 		return user;
 	}
@@ -202,7 +202,7 @@ public class UserDB implements UserDAO {
 		}
 		return flag;
 	}
-
+	
 	@Override
 	public boolean update(User entity) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
@@ -315,7 +315,7 @@ public class UserDB implements UserDAO {
 			st.setString(1, login);
 			rs = st.executeQuery();
 			if(rs.next()) {
-				password = rs.getString(UserMapping.PASSWORD_COLUMN).getBytes();
+				password = rs.getString(UserMapping.PASSWORD).getBytes();
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 

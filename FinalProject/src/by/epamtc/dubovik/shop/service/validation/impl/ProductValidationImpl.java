@@ -13,13 +13,19 @@ public class ProductValidationImpl implements ProductValidation {
 				isValidValue(product.getWidth()) &&
 				isValidValue(product.getHigh()) &&
 				isValidValue(product.getWeight()) &&
-				product.getQuantity() >= 0;
+				product.getQuantity() >= 0 &&
+				isValidImage(product.getPhotoPath());
 				
 		return isValid;
 	}
 	
 	private boolean isValidValue(Integer integer) {
 		return integer == null || integer > 0;
+	}
+	
+	private boolean isValidImage(String path) {
+		String imageFile ="^(.)+\\.(jpg|jpeg|png|gif)$";
+		return path.matches(imageFile);
 	}
 
 }

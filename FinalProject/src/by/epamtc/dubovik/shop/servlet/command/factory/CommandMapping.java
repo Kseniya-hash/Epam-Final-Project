@@ -24,6 +24,15 @@ public class CommandMapping {
 	public static final String CHANGE_LOCALE = "change_locale";
 	public static final String MAKE_ORDER = "make_order";
 	public static final String SHOW_USER_ORDERS = "user_orders";
+	public static final String SHOW_BUYER_ORDERS = "buyer_orders";
+	public static final String ADD_CATEGORY = "add_category";
+	public static final String TO_CREATE_PRODUCT_PAGE = "to_create_product";
+	public static final String CREATE_PRODUCT = "create_product";
+	public static final String TO_PAY_ORDER = "to_pay_fo_order";
+	public static final String PAY_FOR_ORDER = "pay_fo_order";
+	public static final String DELIVER_ORDER = "deliver_order";
+	public static final String BLACKLIST_USER = "blacklist_user";
+	public static final String CREATE_COMMENT = "create_comment";
 	
 	private Map <String, ActionCommand> map = new HashMap<>();
 	
@@ -45,6 +54,15 @@ public class CommandMapping {
 		map.put(CHANGE_LOCALE, new ChangeLocaleCommand());
 		map.put(MAKE_ORDER, new MakeOrderCommand());
 		map.put(SHOW_USER_ORDERS, new ShowUserOrdersCommand());
+		map.put(SHOW_BUYER_ORDERS, new ShowBuyerOrdersCommand());
+		map.put(ADD_CATEGORY, new CreateProductCategoryCommand());
+		map.put(TO_CREATE_PRODUCT_PAGE, new ToCreateProductCommand());
+		map.put(CREATE_PRODUCT, new CreateProductCommand());
+		map.put(TO_PAY_ORDER, new ToPayOrderCommand());
+		map.put(PAY_FOR_ORDER, new PayForOrderCommand());
+		map.put(DELIVER_ORDER, new DeliverOrderCommand());
+		map.put(BLACKLIST_USER, new BlacklistUserCommand());
+		map.put(CREATE_COMMENT, new CreateCommentCommand());
 	}
 	
 	private static class SigletonHolder {

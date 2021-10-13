@@ -6,6 +6,8 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 public interface ProductService {
 	
 	public Product takeProductInfo(int productId) throws ServiceException;
+	public Product takeProductInfo(String productName) throws ServiceException;
 	public boolean redactProductInfo(Product product) throws ServiceException;
+	public boolean createProduct(Product product) throws ServiceException;
 
 }

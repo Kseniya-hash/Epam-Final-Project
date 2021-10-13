@@ -4,14 +4,12 @@ public class ProductCategory extends Entity {
 	private static final long serialVersionUID = 6023233189012694387L;
 	private int id;
 	private String name;
-	private String description;
 
 	public ProductCategory() {};
 
 	public ProductCategory(int id, String name, String description) {
 		this.id = id;
 		this.name = name;
-		this.description = description;
 	}
 
 	public int getId() {
@@ -30,14 +28,6 @@ public class ProductCategory extends Entity {
 		this.name = name;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if(this == o)
@@ -48,8 +38,7 @@ public class ProductCategory extends Entity {
 			return false;
 		ProductCategory other = (ProductCategory)o;
 		if(	this.id == other.getId() &&
-			equalsWithNull(this.name, other.getName()) &&
-			equalsWithNull(this.description, other.getDescription())) {
+			equalsWithNull(this.name, other.getName())) {
 			return true;
 		}
 		return false;
@@ -61,7 +50,6 @@ public class ProductCategory extends Entity {
 		int prime = 31;
 		result = result * prime + id;
 		result = result * prime + hashCodeWithNull(name);
-		result = result * prime + hashCodeWithNull(description);
 		return result;
 	}
 
@@ -69,8 +57,7 @@ public class ProductCategory extends Entity {
 	public String toString() {
 		StringBuffer result = new StringBuffer(this.getClass().getName() + "@");
 		result.append(id + ",");
-		result.append(name + ",");
-		result.append(description);
+		result.append(name);
 		return result.toString();
 	}
 }

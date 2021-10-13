@@ -45,7 +45,8 @@ public class PriceServiceImpl implements PriceService {
 		if(validator.isValid(price)) {
 			try {
 				Price currentPrice = priceDAO.findByProduct(price.getProductId());
-				if(price.getSellingPrice() != currentPrice.getPurchasePrice() ||
+				if(currentPrice == null || 
+						price.getSellingPrice() != currentPrice.getSellingPrice() ||
 						price.getPurchasePrice() != currentPrice.getPurchasePrice()) {
 					isChanged = priceDAO.create(price);
 				}

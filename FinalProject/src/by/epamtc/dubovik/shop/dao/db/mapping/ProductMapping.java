@@ -11,6 +11,7 @@ public final class ProductMapping {
 	public static final String LENGTH = "p_length";
 	public static final String HIGH = "p_high";
 	public static final String WIDTH = "p_width";
+	public static final String PHOTO_PATH = "p_photopath";
 	
 	private ProductMapping() {};
 }

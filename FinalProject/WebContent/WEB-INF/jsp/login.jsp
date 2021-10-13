@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>
-Login
 <fmt:bundle basename="resources.pagecontent" prefix="login.">
 		<fmt:message key="log_in"/>
 	</fmt:bundle>

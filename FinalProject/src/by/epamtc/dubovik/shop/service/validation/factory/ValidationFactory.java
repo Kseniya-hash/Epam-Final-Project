@@ -10,6 +10,7 @@ public class ValidationFactory {
 	private final UserForLoginValidation userForLoginValidation;
 	private final UserValidation userValidation;
 	private final CartValidation cartValidation;
+	private final CommentValidation commentValidation;
 	
 	private ValidationFactory() {
 		priceValidation = new PriceValidationImpl();
@@ -17,6 +18,7 @@ public class ValidationFactory {
 		userForLoginValidation = new UserForLoginValidationImpl();
 		userValidation = new UserValidationImpl();
 		cartValidation = new CartValidationImpl();
+		commentValidation = new CommentValidationImpl();
 	}
 	
 	private static class SigletonHolder {
@@ -45,5 +47,9 @@ public class ValidationFactory {
 	
 	public CartValidation getCartValidation() {
 		return cartValidation;
+	}
+	
+	public CommentValidation getCommentValidation() {
+		return commentValidation;
 	}
 }

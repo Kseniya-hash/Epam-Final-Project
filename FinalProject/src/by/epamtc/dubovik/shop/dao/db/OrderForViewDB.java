@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,19 +21,25 @@ import by.epamtc.dubovik.shop.entity.OrderToProductForView;
 
 public class OrderForViewDB implements OrderForViewDAO {
 	
-	private static final String SQL_SELECT_ALL = "SELECT o_id, u_id, unq_u_login, u_phone, o_date, unq_os_name " + 
+	private static final String SQL_SELECT_ALL = "SELECT o_id, u_id, unq_u_login, u_phone, u_is_blacklisted, o_date, unq_os_name " + 
 			"FROM `dubovik_shop`.`orders` o " + 
 			"LEFT JOIN `dubovik_shop`.`users` u ON o.o_u_id = u.u_id " + 
-			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id;";
+			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id ORDER BY o_date DESC;";
 	
-	private static final String SQL_SELECT_BY_USER = "SELECT o_id, u_id, unq_u_login, u_phone, o_date, unq_os_name " + 
+	private static final String SQL_SELECT_BY_USER = "SELECT o_id, u_id, unq_u_login, u_phone, u_is_blacklisted, o_date, unq_os_name " + 
 			"FROM `dubovik_shop`.`orders` o " + 
 			"LEFT JOIN `dubovik_shop`.`users` u ON o.o_u_id = u.u_id " + 
-			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id WHERE u_id = ?;";
-	private static final String SQL_SELECT_BY_ORDER_STATUS = "SELECT o_id, u_id, unq_u_login, u_phone, o_date, unq_os_name " + 
+			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id WHERE u_id = ? ORDER BY o_date DESC;";
+	
+	private static final String SQL_SELECT_BY_ORDER_STATUS = "SELECT o_id, u_id, unq_u_login, u_phone, u_is_blacklisted, o_date, unq_os_name " + 
 			"FROM `dubovik_shop`.`orders` o " + 
 			"LEFT JOIN `dubovik_shop`.`users` u ON o.o_u_id = u.u_id " + 
-			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id WHERE os.os_id = ?;";
+			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id WHERE os.os_id = ? ORDER BY o_date DESC;";
+	
+	private static final String SQL_SELECT_BY_ID = "SELECT o_id, u_id, unq_u_login, u_phone, u_is_blacklisted, o_date, unq_os_name " + 
+			"FROM `dubovik_shop`.`orders` o " + 
+			"LEFT JOIN `dubovik_shop`.`users` u ON o.o_u_id = u.u_id " + 
+			"LEFT JOIN `dubovik_shop`.`order_statuses` os ON o.o_os_id = os.os_id WHERE o_id = ?;";
 	
 	private static final String SQL_SELECT_SALE = 
 			"SELECT s_o_id, s_quantity, p_id, unq_p_name, pl_selling_price " + 
@@ -51,9 +56,10 @@ public class OrderForViewDB implements OrderForViewDAO {
 		if (!resultSet.isAfterLast()) {
 			order = new OrderForView();
 			order.setId(resultSet.getInt(OrderMapping.ID));
-			order.setUserId(resultSet.getInt(UserMapping.ID_COLUMN));
-			order.setUserLogin(resultSet.getString(UserMapping.LOGIN_COLUMN));
-			order.setUserPhone(resultSet.getString(UserMapping.PHONE_COLUMN));
+			order.setUserId(resultSet.getInt(UserMapping.ID));
+			order.setUserLogin(resultSet.getString(UserMapping.LOGIN));
+			order.setUserPhone(resultSet.getString(UserMapping.PHONE));
+			order.setIsBlacklisted(resultSet.getBoolean(UserMapping.BLACKLIST));
 			order.setOrderStatus(resultSet.getString(OrderStatusMapping.NAME));
 			order.setDate(resultSet.getTimestamp(OrderMapping.DATE));
 		}
@@ -184,6 +190,32 @@ public class OrderForViewDB implements OrderForViewDAO {
 			pool.closeConnection(cn, st, rs);
 		}
 		return orders;
+	}
+
+	@Override
+	public OrderForView findById(int orderId) throws DAOException {
+		ConnectionPool pool = ConnectionPool.getInstance();
+		OrderForView order = null;
+		Connection cn = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			cn = pool.takeConnection();
+			st = cn.prepareStatement(SQL_SELECT_BY_ID);
+			st.setInt(1, orderId);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				order = takeFromResultSet(rs);
+				List<OrderToProductForView> sales = takeSales(order);
+				order.setSales(sales);
+			}
+		} catch(SQLException e) {
+			throw new DAOException(e); 
+		} finally {
+			pool.closeConnection(cn, st, rs);
+		}
+		return order;
 	}
 
 }

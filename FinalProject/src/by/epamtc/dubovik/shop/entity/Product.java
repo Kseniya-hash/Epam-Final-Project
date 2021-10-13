@@ -11,6 +11,7 @@ public class Product extends Entity {
 	private Integer length;
 	private Integer high;
 	private Integer width;
+	private String photoPath;
 
 	public int getId() {
 		return id;
@@ -83,6 +84,14 @@ public class Product extends Entity {
 	public void setWidth(Integer width) {
 		this.width = width;
 	}
+	
+	public String getPhotoPath() {
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -101,7 +110,8 @@ public class Product extends Entity {
 			equalsWithNull(this.weight, other.getWeight())&&
 			equalsWithNull(this.length, other.getLength())&&
 			equalsWithNull(this.high, other.getHigh())&&
-			equalsWithNull(this.width, other.getWidth())) {
+			equalsWithNull(this.width, other.getWidth()) &&
+			equalsWithNull(this.photoPath, other.getPhotoPath())) {
 			return true;
 		}
 		return false;
@@ -120,6 +130,7 @@ public class Product extends Entity {
 		result = result * prime + hashCodeWithNull(length);
 		result = result * prime + hashCodeWithNull(high);
 		result = result * prime + hashCodeWithNull(width);
+		result = result * prime + hashCodeWithNull(photoPath);
 		return result;
 	}
 
@@ -134,7 +145,8 @@ public class Product extends Entity {
 		result.append(weight + ",");
 		result.append(length + ",");
 		result.append(high + ",");
-		result.append(width);
+		result.append(width + ",");
+		result.append(photoPath);
 		return result.toString();
 	}
 }

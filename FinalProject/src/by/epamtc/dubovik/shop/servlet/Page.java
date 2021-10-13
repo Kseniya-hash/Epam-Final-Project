@@ -14,6 +14,8 @@ public final class Page {
 	public static final String PRODUCT = "/WEB-INF/jsp/product.jsp";
 	public static final String REDACT_PRODUCT = "/WEB-INF/jsp/redact_product.jsp";
 	public static final String USER_ORDERS = "/WEB-INF/jsp/user_orders.jsp";
+	public static final String BUYER_ORDERS ="/WEB-INF/jsp/buyer_orders.jsp";
+	public static final String PAY_ORDER = "/WEB-INF/jsp/pay_for_order.jsp";
 	
 	public static final String ERROR404 = "/WEB-INF/jsp/error/error404.jsp";
 	

@@ -26,9 +26,10 @@
 					Номер заказа:
 					<c:out value="${ elem.id }"/><br/>
 					Дата заказа:
-					<c:out value="${ elem.date }"/><br/>
-					Статус:
-					<c:out value="${ elem.orderStatus }"/><br/><br/>
+					<fmt:formatDate value="${ elem.date }" type="both" timeStyle="short"/><br/>
+					<p class="text-danger font-weight-bold">
+						Статус: <c:out value="${ elem.orderStatus }"/>
+					</p><br/>
 					<c:forEach var="sale" items="${ elem.sales }">
 						<c:url value ="Controller?command=show_product&product_id=${ sale.productId }" var="productUrl"/>
 						<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ sale.productName }"/></a><br/>
@@ -44,20 +45,20 @@
 							</br>
 						</div>
 					</c:forEach>
-					<hr/>
 				</div>
 				<div class="col-md-2">
-					<c:if test="${ elem.orderStatus eq оформлен }">
-						<form name="pay_fo_order" method="POST" action="Controller">
-  							<input type="hidden" name="command" value="pay_fo_order"/>
+					<c:if test="${ elem.orderStatus eq 'оформлен' }">
+						<form name="pay_fo_order" method="GET" action="Controller">
+  							<input type="hidden" name="command" value="to_pay_fo_order"/>
     						<button type="submit" 
     							class="btn btn-primary" 
     							name="order_id" 
-   								value = ${ elem.id }><fmt:message key="pay"/></button>
+   								value = ${ elem.id }>Оплатить</button>
     						</form>
 					</c:if>
 				</div>
 			</div>
+			<hr/>
 		</c:forEach>
 	</div>
 	<c:import url="fragment\footer.jsp" charEncoding="utf-8"/>

@@ -20,21 +20,23 @@ public class ProductDB implements ProductDAO {
 	private static final String SQL_CREATE = 
 			"INSERT INTO `dubovik_Shop`.`products` "
 			+ "(`unq_p_name`, `p_pc_id`, `p_description`, `p_quantity`, "
-			+ "`p_weight`, `p_length`, `p_high`, `p_width`) "
-			+ "VALUES (?,?,?,?,?,?,?,?)";
+			+ "`p_weight`, `p_length`, `p_high`, `p_width`, `p_photopath`) "
+			+ "VALUES (?,?,?,?,?,?,?,?,?)";
 	private static final String SQL_DELETE_BY_ID = 
 			"DELETE FROM `dubovik_Shop`.`products` WHERE `p_id`=?";
 	private static final String SQL_DELETE_BY_ENTITY = 
 			"DELETE FROM `dubovik_Shop`.`products` WHERE `p_id` = ? AND "
 			+ "`unq_p_name` = ? AND `p_pc_id` = ? AND `p_description` = ? AND `p_quantity` = ? "
-			+ "AND `p_weight` = ? AND `p_length` = ? AND `p_high` = ? AND `p_width` = ?";
+			+ "AND `p_weight` = ? AND `p_length` = ? AND `p_high` = ? AND `p_width` = ? AND `p_photopath` = ?";
 	private static final String SQL_UPDATE = 
 			"UPDATE `dubovik_Shop`.`products` "
 			+ "SET `unq_p_name` = ?, `p_pc_id` = ?, `p_description` = ?, `p_quantity` = ?, "
-			+ "`p_weight` = ?, `p_length` = ?, `p_high` = ?, `p_width` = ?"
+			+ "`p_weight` = ?, `p_length` = ?, `p_high` = ?, `p_width` = ?, `p_photopath` = ?"
 			+ " WHERE `p_id` = ?";
 	private static final String SQL_SELECT_BY_ID = 
 			"SELECT * FROM `dubovik_Shop`.`products` WHERE `p_id`=?";
+	private static final String SQL_SELECT_BY_NAME = 
+			"SELECT * FROM `dubovik_Shop`.`products` WHERE `unq_p_name`=?";
 
 	private Product takeFromResultSet(ResultSet resultSet) throws SQLException {
 		Product product = null;
@@ -49,6 +51,7 @@ public class ProductDB implements ProductDAO {
 			product.setLength(takeInteger(resultSet, ProductMapping.LENGTH));
 			product.setHigh(takeInteger(resultSet, ProductMapping.HIGH));
 			product.setWidth(takeInteger(resultSet, ProductMapping.WIDTH));
+			product.setPhotoPath(resultSet.getString(ProductMapping.PHOTO_PATH));
 		}
 		
 		return product;
@@ -148,10 +151,11 @@ public class ProductDB implements ProductDAO {
 			st.setInt(3, entity.getCategoryId());
 			st.setString(4, entity.getDescription());
 			st.setInt(5, entity.getQuantity());
-			st.setInt(6, entity.getWeight());
-			st.setInt(7, entity.getLength());
-			st.setInt(8, entity.getHigh());
-			st.setInt(9, entity.getWidth());
+			st.setObject(6, entity.getWeight(), java.sql.Types.INTEGER);
+			st.setObject(7, entity.getLength(), java.sql.Types.INTEGER);
+			st.setObject(8, entity.getHigh(), java.sql.Types.INTEGER);
+			st.setObject(9, entity.getWidth(), java.sql.Types.INTEGER);
+			st.setString(10, entity.getPhotoPath());
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -176,10 +180,11 @@ public class ProductDB implements ProductDAO {
 			st.setInt(2, entity.getCategoryId());
 			st.setString(3, entity.getDescription());
 			st.setInt(4, entity.getQuantity());
-			st.setInt(5, entity.getWeight());
-			st.setInt(6, entity.getLength());
-			st.setInt(7, entity.getHigh());
-			st.setInt(8, entity.getWidth());
+			st.setObject(5, entity.getWeight(), java.sql.Types.INTEGER);
+			st.setObject(6, entity.getLength(), java.sql.Types.INTEGER);
+			st.setObject(7, entity.getHigh(), java.sql.Types.INTEGER);
+			st.setObject(8, entity.getWidth(), java.sql.Types.INTEGER);
+			st.setString(9, entity.getPhotoPath());
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -208,7 +213,8 @@ public class ProductDB implements ProductDAO {
 			st.setObject(6, entity.getLength(), java.sql.Types.INTEGER);
 			st.setObject(7, entity.getHigh(), java.sql.Types.INTEGER);
 			st.setObject(8, entity.getWidth(), java.sql.Types.INTEGER);
-			st.setInt(9, entity.getId());
+			st.setString(9, entity.getPhotoPath());
+			st.setInt(10, entity.getId());
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -220,4 +226,27 @@ public class ProductDB implements ProductDAO {
 		return flag;
 	}
 
+	@Override
+	public Product findByName(String name) throws DAOException {
+		ConnectionPool pool = ConnectionPool.getInstance();
+		Product product = null;
+		Connection cn = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			cn = pool.takeConnection();
+			st = cn.prepareStatement(SQL_SELECT_BY_NAME);
+			st.setString(1, name);
+			rs = st.executeQuery();
+			if(rs.next()) {
+				product = takeFromResultSet(rs);
+			}
+		} catch(SQLException e) {
+			throw new DAOException(e); 
+		} finally {
+			pool.closeConnection(cn, st, rs);
+		}
+		return product;
+	}
 }

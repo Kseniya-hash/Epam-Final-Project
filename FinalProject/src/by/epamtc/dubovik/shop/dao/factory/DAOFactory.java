@@ -10,7 +10,6 @@ public class DAOFactory {
 	private final OrderStatusDAO orderStatusDAO;
 	private final OrderToProductDAO orderToProductDAO;
 	private final ProductCategoryDAO productCategoryDAO;
-	private final ProductPhotoDAO productPhotoDAO;
 	private final ProductDAO productDAO;
 	private final RoleDAO roleDAO;
 	private final UserDAO userDAO;
@@ -26,7 +25,6 @@ public class DAOFactory {
 		orderStatusDAO = new OrderStatusDB();
 		orderToProductDAO = new OrderToProductDB();
 		productCategoryDAO = new ProductCategoryDB();
-		productPhotoDAO = new ProductPhotoDB();
 		productDAO = new ProductDB();
 		roleDAO = new RoleDB();
 		userDAO = new UserDB();
@@ -66,10 +64,6 @@ public class DAOFactory {
 	
 	public ProductDAO getProductDAO() {
 		return productDAO;
-	}
-	
-	public ProductPhotoDAO getProductPhotoDAO() {
-		return productPhotoDAO;
 	}
 	
 	public RoleDAO getRoleDAO() {

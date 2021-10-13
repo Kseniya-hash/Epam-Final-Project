@@ -135,8 +135,8 @@ public class PriceDB implements PriceDAO {
 		try {
 			cn = pool.takeConnection();
 			st = cn.prepareStatement(SQL_SELECT_BY_PRODUCT_ID_AND_DATE);
-			st.setInt(1, productId);
-			st.setTimestamp(2, date);
+			st.setTimestamp(1, date);
+			st.setInt(2, productId);
 			rs = st.executeQuery();
 			if(rs.next()) {
 				price = takeFromResultSet(rs);

@@ -47,4 +47,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 		return category;
 	}
 
+	@Override
+	public boolean createCategory(ProductCategory category) throws ServiceException {
+		ProductCategoryDAO productCategoryDAO = DAOFactory.getInstance().getProductCategoryDAO();
+		boolean isCreated = false;
+		try {
+			isCreated = productCategoryDAO.create(category);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return isCreated;
+	}
+
 }

@@ -38,6 +38,7 @@ public class ProductForMenuDB implements ProductForMenuDAO {
 			product.setCommentCount(resultSet.getInt(ProductForMenuMapping.COMMENT));
 			product.setRating(resultSet.getInt(ProductForMenuMapping.RATING));
 			product.setSellingPrice(resultSet.getInt(PriceLogMapping.SELLING_PRICE));
+			product.setPhotoPath(resultSet.getString(ProductMapping.PHOTO_PATH));
 		}
 		return product;
 	}

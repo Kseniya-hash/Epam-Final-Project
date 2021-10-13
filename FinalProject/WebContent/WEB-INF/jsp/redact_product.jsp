@@ -10,12 +10,41 @@
 <title><c:out value="${ product.name }"/></title>
 </head>
 <body>
-<!-- float-right -->
+<fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
+<fmt:bundle basename="resources.pagecontent" prefix="product.">
+<fmt:requestEncoding value="UTF-8"/>
 <c:import url="fragment\header.jsp" charEncoding="utf-8"/>
+
+<!-- Modal -->
+<div class="modal fade" 
+		id="add_category" 
+		tabindex="-1" role="dialog" 
+		aria-labelledby="exampleModalLabel" 
+		aria-hidden="true">
+  	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+    		<form name="AddCategory" method="POST" action="Controller">
+      			<div class="modal-header">
+        			<h3 class="modal-title" id="exampleModalLabel">Добавить категорию</h3>
+      			</div>
+      			<div class="modal-body">
+					<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
+					<input type="hidden" name="command" value="add_category"/>
+					<input type="text" class="form-control" name="product_category">
+    			</div>
+    			<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        			<button type="submit" class="btn btn-primary">Добавить</button>
+      			</div>
+      		</form>
+    	</div>
+  	</div>
+</div>
+
 <div class="container">
 	<form name="ShowProductForm" method="POST" action="Controller">
 		<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
-		<input type="hidden" name="command" value="redact_product"/>
+		<input type="hidden" name="command" value="${ command }"/>
 		<input type="hidden" name="product_id" value="${ product.id }"/>
 		<div class="form-group">
 			<input type="text" 
@@ -24,9 +53,38 @@
 				name="product_name" 
 				required 
 				value="${ product.name }"/><br/>
+				
+			Категория товара:
+			<select class="form-control" name="product_category" required>
+				<c:forEach var="category" items="${ categories }" >
+					<c:choose>
+						<c:when test="${ category.id eq product.categoryId }">
+							<option selected value="${ category.id }">
+								<c:out value="${ category.name }"/>
+							</option>
+						</c:when>
+						<c:otherwise>
+							<option value="${ category.id }">
+								<c:out value="${ category.name }"/>
+							</option>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+			</select>
+			<div class="row" align="right">
+				<div class="col-md-12">
+					<button type="button" 
+						class="btn btn-secondary btm-sm" 
+						data-toggle="modal" 
+						data-target="#add_category">
+  						Добавить категорию
+					</button>
+			 	</div>
+			</div>
+			</br>
 			<div class="row">
 				<div class="col-md-6">
-					Цена продажи:
+					<fmt:message key="sellingprice"/>
 				</div>
 				<div class="col-md-6">
 					<input type="number" 
@@ -41,7 +99,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					Цена закупки:
+					<fmt:message key="purchaseprice"/> 
 				</div>
 				<div class="col-md-6">
 					<input type="number" 
@@ -56,7 +114,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					Количество на складе:
+					<fmt:message key="quantity"/>
 				</div>
 				<div class="col-md-6">
 					<input type="number" 
@@ -69,19 +127,43 @@
 						value="${ product.quantity }"/><br/>
 				</div>
 			</div>
-			Описание:
+			
+			<div class = "row" align="center">
+				<div class="col-md-4">
+					<img src="${ product.photoPath }" 
+					id="current_photo" 
+					class="img-fluid" 
+					alt="product photo">
+				</div>
+				<div class="col-md-8">
+					Выбрать другую картинку:<br><br>
+					
+					<input type="file" 
+					id="new_photo"
+					class="form-control-file" 
+					name="product_photo" 
+					accept=".jpg,.png,.jpeg,.gif"
+					onchange="handleFiles(this.files)">
+				</div>
+			</div>
+			
+			<script>
+				inputElement.addEventListener("change", handleFiles, false);
+				function handleFiles() {
+					document.getElementById('current_photo').src = document.getElementById('new_photo').value;
+				}
+			</script>
+			<fmt:message key="description"/>
 			<textarea class="form-control" 
 				id="product_description" 
 				name="product_description" 
 				maxlength="1000" 
-				rows="10">
-${ product.description }
-			</textarea><br/>
+				rows="10"><c:out value="${ product.description }"/></textarea><br/>
 			<div class="row">
-				<div class="col-md-2">
-					Вес, г:
+				<div class="col-md-4">
+					<fmt:message key="weight"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-8">
 					<input type="number" 
 						class="form-control" 
 						id="product_weight" 
@@ -92,10 +174,10 @@ ${ product.description }
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">
-					Длина, см:
+				<div class="col-md-4">
+					<fmt:message key="length"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-8">
 					<input type="number" 
 						class="form-control" 
 						id="product_length" 
@@ -106,10 +188,10 @@ ${ product.description }
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">
-					Высота, см:
+				<div class="col-md-4">
+					<fmt:message key="high"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-8">
 					<input type="number" 
 						class="form-control" 
 						id="product_high" 
@@ -120,10 +202,10 @@ ${ product.description }
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">
-					Ширина, см:
+				<div class="col-md-4">
+					<fmt:message key="width"/>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-8">
 					<input type="number" 
 						class="form-control" 
 						id="product_width" 
@@ -133,10 +215,11 @@ ${ product.description }
 						value="${ product.width }"/><br/>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-primary">Сохранить</button>
+			<button type="submit" class="btn btn-primary"><fmt:message key="save"/></button>
 		</div>
 	</form>
 </div>
 <c:import url="fragment\footer.jsp" charEncoding="utf-8"/>
+</fmt:bundle>
 </body>
 </html>

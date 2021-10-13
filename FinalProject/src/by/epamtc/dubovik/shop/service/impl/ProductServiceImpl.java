@@ -22,6 +22,18 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return product;
 	}
+	
+	@Override
+	public Product takeProductInfo(String productName) throws ServiceException {
+		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
+		Product product = null;
+		try {
+			product = productDAO.findByName(productName);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return product;
+	}
 
 	@Override
 	public boolean redactProductInfo(Product product) throws ServiceException {
@@ -36,6 +48,21 @@ public class ProductServiceImpl implements ProductService {
 			}
 		}
 		return isRedacted;
+	}
+
+	@Override
+	public boolean createProduct(Product product) throws ServiceException {
+		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
+		ProductValidation validator = ValidationFactory.getInstance().getProductValidation();
+		boolean isCreated = false;
+		if(validator.isValid(product)) {
+			try {
+				isCreated = productDAO.create(product);
+			} catch (DAOException e) {
+				throw new ServiceException(e);
+			}
+		}
+		return isCreated;
 	}
 
 }

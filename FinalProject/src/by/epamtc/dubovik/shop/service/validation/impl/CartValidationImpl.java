@@ -9,7 +9,7 @@ public class CartValidationImpl implements CartValidation {
 
 	@Override
 	public boolean isValid(Cart cart) {
-		boolean isValid = true;
+		boolean isValid = (cart != null);
 		if(cart != null) {
 			for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
 				if(entry.getValue() < 0) {

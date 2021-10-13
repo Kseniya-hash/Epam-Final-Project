@@ -12,6 +12,7 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.exception.UserAlreadyExistException;
 import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
 import by.epamtc.dubovik.shop.service.RegisterService;
+import by.epamtc.dubovik.shop.service.UserService;
 import by.epamtc.dubovik.shop.service.resource.MessageManager;
 import by.epamtc.dubovik.shop.servlet.Page;
 import by.epamtc.dubovik.shop.servlet.ParameterName;
@@ -27,7 +28,8 @@ public class RegistrationCommand implements ActionCommand {
 		User user = new User();
 		takeUserParamsFromRequest(request, user);
 		byte[] passwordRepeat = request.getParameter(ParameterName.PASSWORD_REPEAT).getBytes();
-		RegisterService registerLogic = ServiceFactory.getInstance().getRegisterService();
+		UserService registerLogic = ServiceFactory.getInstance().getUserService();
+		//RegisterService registerLogic = ServiceFactory.getInstance().getRegisterService();
 		boolean registerFlag = false;
 		try {
 			registerFlag = registerLogic.register(user, passwordRepeat);

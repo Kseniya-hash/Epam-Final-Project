@@ -28,8 +28,8 @@ public class RoleDB implements RoleDAO {
 		Role role = null;
 		if (!resultSet.isAfterLast()) {
 			role = new Role();
-			role.setId(resultSet.getInt(RoleMapping.ID_COLUMN));
-			role.setName(resultSet.getString(RoleMapping.NAME_COLUMN));
+			role.setId(resultSet.getInt(RoleMapping.ID));
+			role.setName(resultSet.getString(RoleMapping.NAME));
 		}
 		return role;
 	}

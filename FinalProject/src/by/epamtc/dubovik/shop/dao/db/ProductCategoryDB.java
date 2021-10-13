@@ -19,15 +19,15 @@ public class ProductCategoryDB implements ProductCategoryDAO {
 	private static final String SQL_SELECT_BY_ID = 
 			"SELECT * FROM `dubovik_Shop`.`product_categories` WHERE `pc_id`=?";
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`product_categories` (`unq_pc_name`, `pc_description`) VALUES (?, ?)";
+			"INSERT INTO `dubovik_Shop`.`product_categories` (`unq_pc_name`) VALUES (?)";
 	private static final String SQL_DELETE_BY_ID = 
 			"DELETE FROM `dubovik_Shop`.`product_categories` WHERE `pc_id`=?";
 	private static final String SQL_DELETE_BY_ENTITY = 
 			"DELETE FROM `dubovik_Shop`.`product_categories` "
-			+ "WHERE `pc_id` = ? AND `unq_pc_name` = ? AND `pc_description` = ?";
+			+ "WHERE `pc_id` = ? AND `unq_pc_name` = ?";
 	private static final String SQL_UPDATE = 
 			"UPDATE `dubovik_Shop`.`product_categories` "
-			+ "SET `unq_pc_name` = ?, `pc_description` = ? WHERE `pc_id` = ?";
+			+ "SET `unq_pc_name` = ? WHERE `pc_id` = ?";
 	
 	private static final String SQL_SELECT_BY_NAME = 
 			"SELECT * FROM `dubovik_Shop`.`product_categories` WHERE `unq_pc_name`=?";
@@ -41,7 +41,6 @@ public class ProductCategoryDB implements ProductCategoryDAO {
 			category = new ProductCategory();
 			category.setId(resultSet.getInt(ProductCategoryMapping.ID));
 			category.setName(resultSet.getString(ProductCategoryMapping.NAME));
-			category.setDescription(resultSet.getString(ProductCategoryMapping.DESCRIPTION));
 		}
 		
 		return category;
@@ -130,7 +129,6 @@ public class ProductCategoryDB implements ProductCategoryDAO {
 			st = cn.prepareStatement(SQL_DELETE_BY_ENTITY);
 			st.setInt(1, entity.getId());
 			st.setString(2, entity.getName());
-			st.setString(3, entity.getDescription());
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -152,7 +150,6 @@ public class ProductCategoryDB implements ProductCategoryDAO {
 			cn = pool.takeConnection();
 			st = cn.prepareStatement(SQL_CREATE);
 			st.setString(1, entity.getName());
-			st.setString(2, entity.getDescription());
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -174,7 +171,6 @@ public class ProductCategoryDB implements ProductCategoryDAO {
 			cn = pool.takeConnection();
 			st = cn.prepareStatement(SQL_UPDATE);
 			st.setString(1, entity.getName());
-			st.setString(2, entity.getDescription());
 			st.setInt(9, entity.getId());
 			int result = st.executeUpdate();
 			flag = result > 0;

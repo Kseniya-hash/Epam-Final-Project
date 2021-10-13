@@ -27,12 +27,14 @@ public class ShowUserOrdersCommand implements ActionCommand {
 		UserLogged user = (UserLogged)session.getAttribute(ParameterName.USER);
 		String page = null;
 		try {
-			orders = orderForViewService.takeUserOrders(user.getId());
+			orders = orderForViewService.takeOrders(user.getId());
+			request.setAttribute(ParameterName.ORDERS, orders);
+			
 			page = Page.USER_ORDERS;
 		} catch (ServiceException e) {
 			page = Page.ERROR404;
 		}
-		request.setAttribute(ParameterName.ORDERS, orders);
+		
 		request.getRequestDispatcher(page).forward(request, response);
 		
 	}

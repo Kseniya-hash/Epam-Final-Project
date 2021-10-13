@@ -6,6 +6,7 @@ public class Comment extends Entity {
 	
 	private int id;
 	private int userId;
+	private String userLogin;
 	private int productId;
 	private String text;
 	private Integer rating;
@@ -24,6 +25,14 @@ public class Comment extends Entity {
 	
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	
+	public String getUserLogin() {
+		return userLogin;
+	}
+	
+	public void setUserLogin(String userLogin) {
+		this.userLogin = userLogin;
 	}
 
 	public int getProductId() {
@@ -61,6 +70,7 @@ public class Comment extends Entity {
 		Comment other = (Comment)o;
 		if(	this.id == other.getId() &&
 			this.userId == other.getUserId() &&
+			equalsWithNull(this.userLogin, other.getUserLogin()) &&
 			this.productId == other.getProductId() &&
 			equalsWithNull(this.text, other.getText()) &&
 			equalsWithNull(this.rating, other.getRating())) {
@@ -75,6 +85,7 @@ public class Comment extends Entity {
 		int prime = 31;
 		result = result * prime + id;
 		result = result * prime + userId;
+		result = result * prime + hashCodeWithNull(userLogin);
 		result = result * prime + productId;
 		result = result * prime + hashCodeWithNull(text);
 		result = result * prime + hashCodeWithNull(rating);
@@ -86,6 +97,7 @@ public class Comment extends Entity {
 		StringBuffer result = new StringBuffer(this.getClass().getName() + "@");
 		result.append(id + ",");
 		result.append(userId + ",");
+		result.append(userLogin + ",");
 		result.append(productId + ",");
 		result.append(text + ",");
 		result.append(rating);

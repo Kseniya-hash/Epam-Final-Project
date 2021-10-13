@@ -10,4 +10,5 @@ public interface ProductCategoryService {
 	public List<ProductCategory> takeAllCategories() throws ServiceException;
 	public ProductCategory takeByName(String name) throws ServiceException;
 	public ProductCategory takeById(int id) throws ServiceException;
+	public boolean createCategory(ProductCategory category) throws ServiceException;
 }

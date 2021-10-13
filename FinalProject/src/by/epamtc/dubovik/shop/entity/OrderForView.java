@@ -11,6 +11,7 @@ public class OrderForView extends Entity {
 	private int userId;
 	private String userLogin;
 	private String userPhone;
+	private boolean isBlacklisted;
 	private Timestamp date;
 	private String orderStatus;
 	private List<OrderToProductForView> sales;
@@ -45,6 +46,14 @@ public class OrderForView extends Entity {
 	
 	public void setUserPhone(String userPhone) {
 		this.userPhone = userPhone;
+	}
+	
+	public boolean getIsBlacklisted() {
+		return isBlacklisted;
+	}
+	
+	public void setIsBlacklisted(boolean isBlacklisted) {
+		this.isBlacklisted = isBlacklisted;
 	}
 	
 	public Timestamp getDate() {
@@ -84,6 +93,7 @@ public class OrderForView extends Entity {
 			this.userId == other.getUserId() &&
 			equalsWithNull(this.userLogin, other.getUserLogin()) &&
 			equalsWithNull(this.userPhone, other.getUserPhone()) &&
+			isBlacklisted == other.getIsBlacklisted() &&
 			equalsWithNull(this.date, other.getDate()) &&
 			equalsWithNull(this.orderStatus, other.getOrderStatus()) &&
 			equalsWithNull(this.sales, other.getSales())) {
@@ -100,6 +110,7 @@ public class OrderForView extends Entity {
 		result = result * prime + userId;
 		result = result * prime + hashCodeWithNull(userLogin);
 		result = result * prime + hashCodeWithNull(userPhone);
+		result = result * prime + (isBlacklisted? 1 : 0);
 		result = result * prime + hashCodeWithNull(date);
 		result = result * prime + hashCodeWithNull(orderStatus);
 		result = result * prime + hashCodeWithNull(sales);
@@ -113,6 +124,7 @@ public class OrderForView extends Entity {
 		result.append(userId + ",");
 		result.append(userLogin + ",");
 		result.append(userPhone + ",");
+		result.append(isBlacklisted + ",");
 		result.append(date + ",");
 		result.append(orderStatus + ",");
 		result.append(sales);

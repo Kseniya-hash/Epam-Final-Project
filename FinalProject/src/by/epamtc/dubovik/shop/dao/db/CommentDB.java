@@ -11,12 +11,15 @@ import by.epamtc.dubovik.shop.connectionpool.ConnectionPool;
 import by.epamtc.dubovik.shop.dao.CommentDAO;
 import by.epamtc.dubovik.shop.dao.DAOException;
 import by.epamtc.dubovik.shop.dao.db.mapping.CommentMapping;
+import by.epamtc.dubovik.shop.dao.db.mapping.UserMapping;
 import by.epamtc.dubovik.shop.entity.Comment;
 
 public class CommentDB implements CommentDAO {
 
 	private static final String SQL_SELECT_ALL = 
-			"SELECT * FROM `dubovik_Shop`.`comments` LIMIT ?,?";
+			"SELECT `c_id`, `c_u_id`, `unq_u_login`, `c_p_id`, `c_text`, `c_rating` "
+			+ "FROM `dubovik_shop`.`comments` c " + 
+			"INNER JOIN `dubovik_shop`.`users` u ON c.c_u_id = u.u_id LIMIT ?,?";
 	private static final String SQL_CREATE = 
 			"INSERT INTO `dubovik_Shop`.`comments` (`c_u_id`, `c_p_id`, `c_text`, `c_rating`) "
 			+ "VALUES (?,?,?,?)";
@@ -30,11 +33,17 @@ public class CommentDB implements CommentDAO {
 			+ " WHERE `c_id` = ?";
 	
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_Shop`.`comments` WHERE `c_id`=?";
+			"SELECT `c_id`, `c_u_id`, `unq_u_login`, `c_p_id`, `c_text`, `c_rating` "
+					+ "FROM `dubovik_shop`.`comments` c " + 
+					"INNER JOIN `dubovik_shop`.`users` u ON c.c_u_id = u.u_id WHERE `c_id`=?";
 	private static final String SQL_SELECT_BY_PRODUCTID = 
-			"SELECT * FROM `dubovik_Shop`.`comments` WHERE `c_p_id`=? LIMIT ?,?";
+			"SELECT `c_id`, `c_u_id`, `unq_u_login`, `c_p_id`, `c_text`, `c_rating` "
+					+ "FROM `dubovik_shop`.`comments` c " + 
+					"INNER JOIN `dubovik_shop`.`users` u ON c.c_u_id = u.u_id WHERE `c_p_id`=?";
 	private static final String SQL_SELECT_BY_USERID = 
-			"SELECT * FROM `dubovik_Shop`.`comments` WHERE `c_u_id`=? LIMIT ?,?";
+			"SELECT `c_id`, `c_u_id`, `unq_u_login`, `c_p_id`, `c_text`, `c_rating` "
+					+ "FROM `dubovik_shop`.`comments` c " + 
+					"INNER JOIN `dubovik_shop`.`users` u ON c.c_u_id = u.u_id WHERE `c_u_id`=?";
 	private static final String SQL_SELECT_COUNT_BY_PRODUCTID = 
 			"SELECT count(`c_id`) FROM `dubovik_Shop`.`comments` WHERE `c_p_id`=?";
 	private static final String SQL_SELECT_AVG_RATING_BY_PRODUCTID = 
@@ -47,6 +56,7 @@ public class CommentDB implements CommentDAO {
 			comment = new Comment();
 			comment.setId(resultSet.getInt(CommentMapping.ID));
 			comment.setUserId(resultSet.getInt(CommentMapping.USER_ID));
+			comment.setUserLogin(resultSet.getString(UserMapping.LOGIN));
 			comment.setProductId(resultSet.getInt(CommentMapping.PRODUCT_ID));
 			comment.setText(resultSet.getString(CommentMapping.TEXT));
 			comment.setRating(resultSet.getInt(CommentMapping.RATING));
@@ -98,7 +108,7 @@ public class CommentDB implements CommentDAO {
 			st.setInt(2, entity.getUserId());
 			st.setInt(3, entity.getProductId());
 			st.setString(4, entity.getText());
-			st.setInt(5, entity.getRating());
+			st.setObject(5, entity.getRating(), java.sql.Types.INTEGER);
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -144,7 +154,7 @@ public class CommentDB implements CommentDAO {
 			st.setInt(1, entity.getUserId());
 			st.setInt(2, entity.getProductId());
 			st.setString(3, entity.getText());
-			st.setInt(4, entity.getRating());
+			st.setObject(4, entity.getRating(), java.sql.Types.INTEGER);
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
@@ -205,7 +215,7 @@ public class CommentDB implements CommentDAO {
 	}
 
 	@Override
-	public List<Comment> findByProduct(int productId, int offset, int count) 
+	public List<Comment> findByProduct(int productId) 
 			throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<Comment> comments= new ArrayList<>();
@@ -217,8 +227,6 @@ public class CommentDB implements CommentDAO {
 			cn = pool.takeConnection();
 			st = cn.prepareStatement(SQL_SELECT_BY_PRODUCTID);
 			st.setInt(1, productId);
-			st.setInt(2, offset);
-			st.setInt(3, count);
 			rs = st.executeQuery();
 			while(rs.next()) {
 				Comment currentComment = takeFromResultSet(rs);
@@ -233,7 +241,7 @@ public class CommentDB implements CommentDAO {
 	}
 
 	@Override
-	public List<Comment> findByUser(int userId, int offset, int count) 
+	public List<Comment> findByUser(int userId) 
 			throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<Comment> comments= new ArrayList<>();
@@ -245,8 +253,6 @@ public class CommentDB implements CommentDAO {
 			cn = pool.takeConnection();
 			st = cn.prepareStatement(SQL_SELECT_BY_USERID);
 			st.setInt(1, userId);
-			st.setInt(2, offset);
-			st.setInt(3, count);
 			rs = st.executeQuery();
 			while(rs.next()) {
 				Comment currentComment = takeFromResultSet(rs);

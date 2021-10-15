@@ -1,6 +1,6 @@
 package by.epamtc.dubovik.shop.service.exception;
 
-public class OutOfStockException  extends Throwable {
+public class OutOfStockException  extends Exception {
 	
 	private static final long serialVersionUID = -4173482178881654105L;
 

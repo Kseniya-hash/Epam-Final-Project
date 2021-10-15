@@ -1,36 +1,29 @@
 package by.epamtc.dubovik.shop.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 
-public class Price extends Entity {
+public class Price implements Serializable {
 	private static final long serialVersionUID = -732980308948139035L;
-	private int id;
-	private int productId;
+	private long id;
+	private long productId;
 	private int purchasePrice;
 	private int sellingPrice;
 
 	public Price() {};
 
-	public Price(int id, int productId, int purchasePrice, int sellingPrice, Timestamp date) {
-		this.id = id;
-		this.productId = productId;
-		this.purchasePrice = purchasePrice;
-		this.sellingPrice = sellingPrice;
-	}
-
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 	
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 
@@ -72,8 +65,8 @@ public class Price extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + productId;
+		result = result * prime + (int)id;
+		result = result * prime + (int)productId;
 		result = result * prime + purchasePrice;
 		result = result * prime + sellingPrice;
 		return result;

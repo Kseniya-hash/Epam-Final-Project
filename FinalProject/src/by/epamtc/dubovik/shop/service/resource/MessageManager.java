@@ -1,16 +1,9 @@
 package by.epamtc.dubovik.shop.service.resource;
 
-import java.util.ResourceBundle;
+import java.util.Locale;
 
-public class MessageManager {
+public interface MessageManager {
 	
-	private final static ResourceBundle resourceBundle = 
-			ResourceBundle.getBundle("resources.messages");
-	
-	private MessageManager() {};
-	
-	public static String getProperty(String key) {
-		return resourceBundle.getString(key);
-	}
+	public String getProperty(String key, Locale locale);
 
 }

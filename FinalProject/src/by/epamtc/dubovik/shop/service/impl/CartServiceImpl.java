@@ -22,12 +22,12 @@ public class CartServiceImpl implements CartService {
 	private static final int DEFAULT_COUNT = 1;
 
 	@Override
-	public boolean increment(Cart cart, int productId) throws InvalidException, ServiceException {
+	public boolean increment(Cart cart, long productId) throws InvalidException, ServiceException {
 		return add(cart, productId, DEFAULT_COUNT);
 	}
 	
 	@Override
-	public boolean add(Cart cart, int productId, int count) throws InvalidException {
+	public boolean add(Cart cart, long productId, int count) throws InvalidException, ServiceException {
 		if(count < 0) {
 			throw new InvalidException("Can not add negative number to the cart");
 		}
@@ -49,42 +49,19 @@ public class CartServiceImpl implements CartService {
 				isAdded = true;
 			}
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ServiceException(e);
 		}
 		return isAdded;
 	}
 	
-	/*
-	 * public void add(Cart cart, int productId, int count) throws InvalidException {
-		if(count < 0) {
-			throw new InvalidException("Can not add negative number to the cart");
-		}
-		CartValidation validator = ValidationFactory.getInstance().getCartValidation();
-		if(!validator.isValid(cart)) {
-			throw new InvalidException("Invalid cart");
-		}
-		int newCount = count;
-		Integer currentCount = cart.get(productId);
-		if(currentCount != null) {
-			newCount = count + currentCount;
-		}
-		
-		cart.put(productId, newCount);
-	}
-	 * (non-Javadoc)
-	 * @see by.epamtc.dubovik.shop.service.CartService#decrement(by.epamtc.dubovik.shop.entity.Cart, int)
-	 */
-	
-
 	@Override
-	public boolean decrement(Cart cart, int productId) throws InvalidException {
+	public boolean decrement(Cart cart, long productId) throws InvalidException {
 		return remove(cart, productId, DEFAULT_COUNT);
 	}
 
 
 	@Override
-	public boolean remove(Cart cart, int productId, int count) throws InvalidException {
+	public boolean remove(Cart cart, long productId, int count) throws InvalidException {
 		if(count < 0) {
 			throw new InvalidException("Can not take negative number from the cart");
 		}
@@ -103,7 +80,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void remove(Cart cart, int productId) {
+	public void remove(Cart cart, long productId) {
 		if(cart.containsKey(productId)) {
 			cart.remove(productId);
 		}
@@ -127,7 +104,7 @@ public class CartServiceImpl implements CartService {
 		List<ProductForCart> products = new LinkedList<>();
 		
 		ProductForCartDAO productForCartDAO = DAOFactory.getInstance().getProductForCartDAO();
-		for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+		for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
 			ProductForCart product = null;
 			
 			try {

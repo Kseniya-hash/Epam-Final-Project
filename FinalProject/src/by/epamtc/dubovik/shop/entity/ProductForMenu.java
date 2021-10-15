@@ -1,8 +1,12 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class ProductForMenu extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class ProductForMenu implements Serializable {
 	private static final long serialVersionUID = -7848542087857798329L;
-	private int id;
+	
+	private long id;
 	private String name;
 	private String productCategory;
 	private String description;
@@ -11,11 +15,13 @@ public class ProductForMenu extends Entity {
 	private int sellingPrice;
 	private String photoPath;
 	
-	public int getId() {
+	public ProductForMenu() {}
+	
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -85,13 +91,13 @@ public class ProductForMenu extends Entity {
 			return false;
 		ProductForMenu other = (ProductForMenu)o;
 		if(	this.id == other.getId() &&
-			equalsWithNull(this.name, other.getName()) &&
-			equalsWithNull(this.productCategory, other.getProductCategory()) &&
-			equalsWithNull(this.description, other.getDescription()) &&
+			Objects.equals(this.name, other.getName()) &&
+			Objects.equals(this.productCategory, other.getProductCategory()) &&
+			Objects.equals(this.description, other.getDescription()) &&
 			this.commentCount == other.getCommentCount() &&
 			this.rating == other.getRating() &&
 			this.sellingPrice == other.getSellingPrice() &&
-			equalsWithNull(this.photoPath, other.getPhotoPath())) {
+			Objects.equals(this.photoPath, other.getPhotoPath())) {
 			return true;
 		}
 		return false;
@@ -101,14 +107,14 @@ public class ProductForMenu extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
-		result = result * prime + hashCodeWithNull(productCategory);
-		result = result * prime + hashCodeWithNull(description);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
+		result = result * prime + Objects.hashCode(productCategory);
+		result = result * prime + Objects.hashCode(description);
 		result = result * prime + commentCount;
 		result = result * prime + rating;
 		result = result * prime + sellingPrice;
-		result = result * prime + hashCodeWithNull(photoPath);
+		result = result * prime + Objects.hashCode(photoPath);
 		return result;
 	}
 

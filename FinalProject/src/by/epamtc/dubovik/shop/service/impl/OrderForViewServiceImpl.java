@@ -12,7 +12,7 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 public class OrderForViewServiceImpl implements OrderForViewService {
 
 	@Override
-	public List<OrderForView> takeOrders(int userId) throws ServiceException {
+	public List<OrderForView> takeOrders(long userId) throws ServiceException {
 		List<OrderForView> orders = null;
 		DAOFactory factory = DAOFactory.getInstance();
 		OrderForViewDAO orderForViewDAO = factory.getOrderForViewDAO();
@@ -25,12 +25,13 @@ public class OrderForViewServiceImpl implements OrderForViewService {
 	}
 	
 	@Override
-	public List<OrderForView> takeOrders() throws ServiceException {
+	public List<OrderForView> takeOrders(int page, int count) throws ServiceException {
 		List<OrderForView> orders = null;
 		DAOFactory factory = DAOFactory.getInstance();
 		OrderForViewDAO orderForViewDAO = factory.getOrderForViewDAO();
 		try {
-			orders = orderForViewDAO.findAll();
+			int offset = (page - 1) * count;
+			orders = orderForViewDAO.findAll(offset, count);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -38,7 +39,7 @@ public class OrderForViewServiceImpl implements OrderForViewService {
 	}
 
 	@Override
-	public OrderForView takeById(int orderId) throws ServiceException {
+	public OrderForView takeById(long orderId) throws ServiceException {
 		OrderForView order = null;
 		DAOFactory factory = DAOFactory.getInstance();
 		OrderForViewDAO orderForViewDAO = factory.getOrderForViewDAO();
@@ -48,6 +49,19 @@ public class OrderForViewServiceImpl implements OrderForViewService {
 			throw new ServiceException(e);
 		}
 		return order;
+	}
+
+	@Override
+	public int countAll() throws ServiceException {
+		int count = 0;
+		DAOFactory factory = DAOFactory.getInstance();
+		OrderForViewDAO orderForViewDAO = factory.getOrderForViewDAO();
+		try {
+			count = orderForViewDAO.countAll();
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return count;
 	}
 
 }

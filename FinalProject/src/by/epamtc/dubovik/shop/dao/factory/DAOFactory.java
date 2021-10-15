@@ -1,14 +1,13 @@
 package by.epamtc.dubovik.shop.dao.factory;
 
 import by.epamtc.dubovik.shop.dao.*;
-import by.epamtc.dubovik.shop.dao.db.*;
+import by.epamtc.dubovik.shop.dao.jdbcimpl.*;
 
 public class DAOFactory {
 	
 	private final CommentDAO commentDAO;
 	private final OrderDAO orderDAO;
 	private final OrderStatusDAO orderStatusDAO;
-	private final OrderToProductDAO orderToProductDAO;
 	private final ProductCategoryDAO productCategoryDAO;
 	private final ProductDAO productDAO;
 	private final RoleDAO roleDAO;
@@ -20,18 +19,17 @@ public class DAOFactory {
 	
 	
 	private DAOFactory() {
-		commentDAO = new CommentDB();
-		orderDAO = new OrderDBv2();
-		orderStatusDAO = new OrderStatusDB();
-		orderToProductDAO = new OrderToProductDB();
-		productCategoryDAO = new ProductCategoryDB();
-		productDAO = new ProductDB();
-		roleDAO = new RoleDB();
-		userDAO = new UserDB();
-		productForMenuDAO = new ProductForMenuDB();
-		productForCartDAO = new ProductForCartDB();
-		priceDAO = new PriceDB();
-		orderForViewDAO = new OrderForViewDB();
+		commentDAO = new CommentJDBC();
+		orderDAO = new OrderJDBC();
+		orderStatusDAO = new OrderStatusJDBC();
+		productCategoryDAO = new ProductCategoryJDBC();
+		productDAO = new ProductJDBC();
+		roleDAO = new RoleJDBC();
+		userDAO = new UserJDBC();
+		productForMenuDAO = new ProductForMenuJDBC();
+		productForCartDAO = new ProductForCartJDBC();
+		priceDAO = new PriceJDBC();
+		orderForViewDAO = new OrderForViewJDBC();
 	};
 	
 	private static class SigletonHolder {
@@ -52,10 +50,6 @@ public class DAOFactory {
 	
 	public OrderStatusDAO getOrderStatusDAO() {
 		return orderStatusDAO;
-	}
-	
-	public OrderToProductDAO getOrderToProductDAO() {
-		return orderToProductDAO;
 	}
 	
 	public ProductCategoryDAO getProductCategoryDAO() {

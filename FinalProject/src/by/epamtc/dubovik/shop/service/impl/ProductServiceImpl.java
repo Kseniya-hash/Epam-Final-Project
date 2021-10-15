@@ -12,7 +12,7 @@ import by.epamtc.dubovik.shop.service.validation.factory.ValidationFactory;
 public class ProductServiceImpl implements ProductService {
 
 	@Override
-	public Product takeProductInfo(int productId) throws ServiceException {
+	public Product takeProductInfo(long productId) throws ServiceException {
 		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
 		Product product = null;
 		try {

@@ -13,22 +13,32 @@ import by.epamtc.dubovik.shop.service.impl.sortproduct.SortMapping;
 import by.epamtc.dubovik.shop.service.impl.sortproduct.SortType;
 
 public class ProductForMenuServiceImpl implements ProductForMenuService {
-
-	//private static final int OFFSET = 0;
-	private static final int COUNT = 3;
 	
 	@Override
-	public List<ProductForMenu> takeSortedList(SortType type, int page) throws ServiceException {
+	public List<ProductForMenu> takeSortedList(SortType type, int page, int count) throws ServiceException {
 		List<ProductForMenu> products = null;
 		DAOFactory factory = DAOFactory.getInstance();
 		ProductForMenuDAO productForMenuDAO = factory.getProductForMenuDAO();
 		ProductSort currentSorting = SortMapping.getInstance().takeByKey(type);
 		try {
-			int offset = (page - 1) * COUNT;
-			products = currentSorting.takeList(productForMenuDAO, offset, COUNT);
+			int offset = (page - 1) * count;
+			products = currentSorting.takeList(productForMenuDAO, offset, count);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 		return products;
+	}
+
+	@Override
+	public int countAll() throws ServiceException {
+		int count = 0;
+		DAOFactory factory = DAOFactory.getInstance();
+		ProductForMenuDAO productForMenuDAO = factory.getProductForMenuDAO();
+		try {
+			count = productForMenuDAO.countAll();
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return count;
 	}
 }

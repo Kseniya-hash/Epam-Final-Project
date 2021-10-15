@@ -1,24 +1,28 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class OrderToProduct extends Entity {
+import java.io.Serializable;
+
+public class OrderToProduct implements Serializable {
 	private static final long serialVersionUID = -395221761385286625L;
-	private int orderId;
-	private int productId;
+	private long orderId;
+	private long productId;
 	private int quantity;
 	
-	public int getOrderId() {
+	public OrderToProduct() {}
+	
+	public long getOrderId() {
 		return orderId;
 	}
 	
-	public void setOrderId(int orderId) {
+	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
 
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 	
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 
@@ -51,8 +55,8 @@ public class OrderToProduct extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + orderId;
-		result = result * prime + productId;
+		result = result * prime + (int)orderId;
+		result = result * prime + (int)productId;
 		result = result * prime + quantity;
 		return result;
 	}

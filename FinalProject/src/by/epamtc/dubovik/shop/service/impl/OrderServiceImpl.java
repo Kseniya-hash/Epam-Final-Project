@@ -1,6 +1,6 @@
 package by.epamtc.dubovik.shop.service.impl;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
 	private final static int DELIVERED_ORDER = 3;
 
 	@Override
-	public boolean makeOrder(int userId, Cart cart) throws ServiceException, InvalidException {
+	public boolean makeOrder(long userId, Cart cart) throws ServiceException, InvalidException {
 		Order order = takeOrderFromCart(userId, cart);
 		OrderDAO orderDAO = DAOFactory.getInstance().getOrderDAO();
 		boolean isMade = false;
@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 		return isMade;
 	}
 	
-	private Order takeOrderFromCart(int userId, Cart cart) throws InvalidException {
+	private Order takeOrderFromCart(long userId, Cart cart) throws InvalidException {
 		CartValidation validator = ValidationFactory.getInstance().getCartValidation();
 		if(!validator.isValid(cart)) {
 			throw new InvalidException("Invalid cart");
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setUserId(userId);
 		order.setOrderStatusId(PROCESSED_ORDER);
 		List<OrderToProduct> sales = new LinkedList<OrderToProduct>();
-		for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+		for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
 			OrderToProduct sale = new OrderToProduct();
 			sale.setProductId(entry.getKey());
 			sale.setQuantity(entry.getValue());
@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}
 	
-	public Order takeOrderById(int orderId) throws ServiceException {
+	public Order takeOrderById(long orderId) throws ServiceException {
 		OrderDAO orderDAO = DAOFactory.getInstance().getOrderDAO();
 		Order order = null;
 		try {
@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}
 	
-	public int calculatePrice(int orderId) throws ServiceException, InvalidException {
+	public int calculatePrice(long orderId) throws ServiceException, InvalidException {
 		Order order = takeOrderById(orderId);
 		int price = calculatePrice(order);
 		return price;
@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		PriceService priceService = ServiceFactory.getInstance().getPriceService();
 		int priceOfOrder = 0;
-		Timestamp date = order.getDate();
+		LocalDateTime date = order.getDate();
 		for(OrderToProduct sale : order.getSales()) {
 			Price priceOfProduct = priceService.takePriceByProduct(sale.getProductId(), date);
 			priceOfOrder += sale.getQuantity() * priceOfProduct.getSellingPrice();
@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public boolean payForOrder(int orderId, long card) throws ServiceException, InvalidException {
+	public boolean payForOrder(long orderId, long card) throws ServiceException, InvalidException {
 		PayService payService = ServiceFactory.getInstance().getPayService();
 		
 		boolean isPaid = false;
@@ -117,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public boolean deliverOrder(int orderId) throws ServiceException, InvalidException {
+	public boolean deliverOrder(long orderId) throws ServiceException, InvalidException {
 		boolean isDelivered = false;
 		Order order = takeOrderById(orderId);
 		

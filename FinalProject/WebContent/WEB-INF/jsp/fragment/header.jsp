@@ -16,13 +16,10 @@
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <fmt:bundle basename="resources.pagecontent" prefix="header.">
 
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-md">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			SHOP
-		</div>
-		<div class="navbar-header">
-			 ${ user.login }
 		</div>
 		<div>
 			<ul class="navbar-nav">
@@ -43,18 +40,17 @@
 				</c:if>
 				<c:if test="${ user.role == 'admin' }">
 					<li class="nav-item">
-						<a class="nav-link" href="Controller?command=buyer_orders">
-							<fmt:message key="buyerorders"/>
+						<a class="nav-link" href="Controller?command=customer_orders">
+							<fmt:message key="customerorders"/>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="Controller?command=to_create_product">
-							Добавить товар
+							<fmt:message key="addproduct"/>
 						</a>
 					</li>
 				</c:if>
 				<li class="nav-item">
-					<!--  <a class="nav-link" href="#"><fmt:message key="language"/></a>-->
 					<div class="dropdown">
 			  <button class="btn btn-link dropdown-toggle" type="button" 
 			id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,8 +59,12 @@
 			<div class="dropdown-menu">
   				<form name="ProductSort" method="GET" action="Controller">
   				<input type="hidden" name="command" value="change_locale"/>
-    				<button class="dropdown-item" type="submit" name="locale" value="ru-RU"><fmt:message key="russian"/></button>
-	    			<button class="dropdown-item" type="submit" name="locale" value="en-US"><fmt:message key="english"/></button>
+    				<button class="dropdown-item" type="submit" name="locale" value="ru-RU">
+    					<fmt:message key="russian"/>
+    				</button>
+	    			<button class="dropdown-item" type="submit" name="locale" value="en-US">
+	    				<fmt:message key="english"/>
+	    			</button>
    				</form>
 			</div>
 		</div>
@@ -72,15 +72,21 @@
 				<c:choose>
 				<c:when test="${ empty user }">
 					<li class="nav-item">
-						<a class="nav-link" href="Controller?command=to_login_page"><fmt:message key="login"/></a>
+						<a class="nav-link" href="Controller?command=to_login_page">
+							<fmt:message key="login"/>
+						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="Controller?command=to_registration_page"><fmt:message key="register"/></a>
+						<a class="nav-link" href="Controller?command=to_registration_page">
+							<fmt:message key="register"/>
+						</a>
 					</li>
 				</c:when>
 				<c:otherwise>
 					<li class="nav-item">
-						<a class="nav-link" href="Controller?command=logout"><fmt:message key="logout"/></a>
+						<a class="nav-link" href="Controller?command=logout">
+							<fmt:message key="logout"/>
+						</a>
 					</li>
 				</c:otherwise>
 				</c:choose>

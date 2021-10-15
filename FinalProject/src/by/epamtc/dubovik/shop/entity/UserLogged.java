@@ -1,27 +1,24 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class UserLogged extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class UserLogged implements Serializable {
 	
 	private static final long serialVersionUID = -2296118640944821035L;
 	
-	private int id;
+	private long id;
 	private String login;
 	private boolean isBlacklisted;
 	private String role;
 	
 	public UserLogged() {}
 	
-	public UserLogged(String login, boolean isBlacklisted, String role) {
-		this.login = login;
-		this.isBlacklisted = isBlacklisted;
-		this.role = role;
-	}
-	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	
@@ -59,9 +56,9 @@ public class UserLogged extends Entity {
 			return false;
 		UserLogged other = (UserLogged)o;
 		if(this.id == other.getId() &&
-				equalsWithNull(this.login, other.getLogin()) &&
+				Objects.equals(this.login, other.getLogin()) &&
 				this.isBlacklisted == other.getIsBlacklisted() &&
-				equalsWithNull(this.role, other.getRole())) {
+				Objects.equals(this.role, other.getRole())) {
 			return true;
 		}
 		return false;
@@ -71,10 +68,10 @@ public class UserLogged extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * id;
-		result = result * prime + hashCodeWithNull(login);
+		result = result * (int)id;
+		result = result * prime + Objects.hashCode(login);
 		result = result * prime + (isBlacklisted ? 1 : 0);
-		result = result * prime + hashCodeWithNull(role);
+		result = result * prime + Objects.hashCode(role);
 		return result;
 	}
 

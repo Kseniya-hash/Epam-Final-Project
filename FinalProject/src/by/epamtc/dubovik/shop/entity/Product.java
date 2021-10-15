@@ -1,10 +1,13 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class Product extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Product implements Serializable {
 	private static final long serialVersionUID = -1848202786878946658L;
-	private int id;
+	private long id;
 	private String name;
-	private int categoryId;
+	private long categoryId;
 	private int quantity;
 	private String description;
 	private Integer weight;
@@ -12,12 +15,14 @@ public class Product extends Entity {
 	private Integer high;
 	private Integer width;
 	private String photoPath;
+	
+	public Product() {}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -29,11 +34,11 @@ public class Product extends Entity {
 		this.name = name;
 	}
 
-	public int getCategoryId() {
+	public long getCategoryId() {
 		return categoryId;
 	}
 	
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
 
@@ -103,15 +108,15 @@ public class Product extends Entity {
 			return false;
 		Product other = (Product)o;
 		if(	this.id == other.getId() &&
-			equalsWithNull(this.name, other.getName()) &&
+			Objects.equals(this.name, other.getName()) &&
 			this.categoryId == other.getCategoryId() &&
-			equalsWithNull(this.description, other.getDescription()) &&
+			Objects.equals(this.description, other.getDescription()) &&
 			this.quantity == other.getQuantity() &&
-			equalsWithNull(this.weight, other.getWeight())&&
-			equalsWithNull(this.length, other.getLength())&&
-			equalsWithNull(this.high, other.getHigh())&&
-			equalsWithNull(this.width, other.getWidth()) &&
-			equalsWithNull(this.photoPath, other.getPhotoPath())) {
+			Objects.equals(this.weight, other.getWeight())&&
+			Objects.equals(this.length, other.getLength())&&
+			Objects.equals(this.high, other.getHigh())&&
+			Objects.equals(this.width, other.getWidth()) &&
+			Objects.equals(this.photoPath, other.getPhotoPath())) {
 			return true;
 		}
 		return false;
@@ -121,16 +126,16 @@ public class Product extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
-		result = result * prime + categoryId;
-		result = result * prime + hashCodeWithNull(description);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
+		result = result * prime + (int)categoryId;
+		result = result * prime + Objects.hashCode(description);
 		result = result * prime + quantity;
-		result = result * prime + hashCodeWithNull(weight);
-		result = result * prime + hashCodeWithNull(length);
-		result = result * prime + hashCodeWithNull(high);
-		result = result * prime + hashCodeWithNull(width);
-		result = result * prime + hashCodeWithNull(photoPath);
+		result = result * prime + Objects.hashCode(weight);
+		result = result * prime + Objects.hashCode(length);
+		result = result * prime + Objects.hashCode(high);
+		result = result * prime + Objects.hashCode(width);
+		result = result * prime + Objects.hashCode(photoPath);
 		return result;
 	}
 

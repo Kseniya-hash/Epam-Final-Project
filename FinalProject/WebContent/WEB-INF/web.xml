@@ -4,69 +4,93 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  
+  <error-page>  
+  	<error-code>500</error-code>  
+  	<location>/error/error500.jsp</location>  
+  </error-page> 
+  
+  <error-page>  
+  	<error-code>404</error-code>  
+  	<location>/error/error404.jsp</location>  
+  </error-page>   
+  
   <servlet>
     <description></description>
     <display-name>Controller</display-name>
     <servlet-name>Controller</servlet-name>
-    <servlet-class>by.epamtc.dubovik.shop.servlet.Controller</servlet-class>
+    <servlet-class>by.epamtc.dubovik.shop.controller.Controller</servlet-class>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>Controller</servlet-name>
     <url-pattern>/Controller</url-pattern>
   </servlet-mapping>
+  
   <jsp-config>
-    <jsp-property-group>
-      <url-pattern>*.jsp</url-pattern>
-      <page-encoding>UTF-8</page-encoding>
-    </jsp-property-group>
+  	<taglib>
+  		<taglib-uri>customtags</taglib-uri>
+  		<taglib-location>/WEB_INF/tld/custom.tld</taglib-location>
+  	</taglib>
   </jsp-config>
-  <filter>
+
+ <filter>
     <display-name>SecurityFilter</display-name>
     <filter-name>SecurityFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.servlet.filter.SecurityFilter</filter-class>
+    <filter-class>by.epamtc.dubovik.shop.controller.filter.SecurityFilter</filter-class>
   </filter>
+  
   <filter-mapping>
     <filter-name>SecurityFilter</filter-name>
     <url-pattern>/Controller</url-pattern>
   </filter-mapping>
+  
   <filter>
     <display-name>PreviousRequestFilter</display-name>
     <filter-name>PreviousRequestFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.servlet.filter.PreviousRequestFilter</filter-class>
+    <filter-class>by.epamtc.dubovik.shop.controller.filter.PreviousRequestFilter</filter-class>
   </filter>
+  
   <filter-mapping>
     <filter-name>PreviousRequestFilter</filter-name>
     <url-pattern>/Controller</url-pattern>
   </filter-mapping>
+  
   <filter>
     <display-name>CharsetFilter</display-name>
     <filter-name>CharsetFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.servlet.filter.CharsetFilter</filter-class>
+    <filter-class>by.epamtc.dubovik.shop.controller.filter.CharsetFilter</filter-class>
     <init-param>
       <param-name>characterEndoding</param-name>
       <param-value>UTF-8</param-value>
     </init-param>
+    
   </filter>
   <filter-mapping>
     <filter-name>CharsetFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
   <filter>
     <display-name>CSRFFilter</display-name>
     <filter-name>CSRFFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.servlet.filter.CSRFFilter</filter-class>
+    <filter-class>by.epamtc.dubovik.shop.controller.filter.CSRFFilter</filter-class>
   </filter>
+  
   <filter-mapping>
     <filter-name>CSRFFilter</filter-name>
     <url-pattern>/Controller</url-pattern>
   </filter-mapping>
+  
   <filter>
     <display-name>LocaleFilter</display-name>
     <filter-name>LocaleFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.servlet.filter.LocaleFilter</filter-class>
+    <filter-class>by.epamtc.dubovik.shop.controller.filter.LocaleFilter</filter-class>
   </filter>
+  
   <filter-mapping>
     <filter-name>LocaleFilter</filter-name>
     <url-pattern>/Controller</url-pattern>
   </filter-mapping>
+  
 </web-app>

@@ -23,6 +23,10 @@ public class SortMapping {
 		return productMap.get(type);
 	}
 	
+	public boolean containsSortType(SortType type) {
+		return productMap.containsKey(type);
+	}
+	
 	private static class SigletonHolder {
 		private final static SortMapping INSTANCE = new SortMapping();
 	}

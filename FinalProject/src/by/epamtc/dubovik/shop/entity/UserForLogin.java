@@ -1,6 +1,9 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class UserForLogin extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class UserForLogin implements Serializable {
 	
 	private static final long serialVersionUID = -6875871018369306020L;
 	private String login;
@@ -37,8 +40,8 @@ public class UserForLogin extends Entity {
 		if(this.getClass() != o.getClass())
 			return false;
 		UserForLogin other = (UserForLogin)o;
-		if(equalsWithNull(this.login, other.getLogin()) &&
-				equalsWithNull(this.password, other.getPassword())) {
+		if(Objects.equals(this.login, other.getLogin()) &&
+				Objects.equals(this.password, other.getPassword())) {
 			return true;
 		}
 		return false;
@@ -48,8 +51,8 @@ public class UserForLogin extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + hashCodeWithNull(login);
-		result = result * prime + hashCodeWithNull(password);
+		result = result * prime + Objects.hashCode(login);
+		result = result * prime + Objects.hashCode(password);
 		return result;
 	}
 

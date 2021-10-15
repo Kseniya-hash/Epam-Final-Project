@@ -36,7 +36,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	}
 
 	@Override
-	public ProductCategory takeById(int id) throws ServiceException {
+	public ProductCategory takeById(long id) throws ServiceException {
 		ProductCategoryDAO productCategoryDAO = DAOFactory.getInstance().getProductCategoryDAO();
 		ProductCategory category = null;
 		try {

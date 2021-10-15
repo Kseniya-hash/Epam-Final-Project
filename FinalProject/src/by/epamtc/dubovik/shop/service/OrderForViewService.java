@@ -7,8 +7,9 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 
 public interface OrderForViewService {
 	
-	List<OrderForView> takeOrders(int userId) throws ServiceException;
-	List<OrderForView> takeOrders() throws ServiceException;
-	OrderForView takeById(int orderId) throws ServiceException;
+	List<OrderForView> takeOrders(long userId) throws ServiceException;
+	List<OrderForView> takeOrders(int page, int count) throws ServiceException;
+	public int countAll() throws ServiceException;
+	OrderForView takeById(long orderId) throws ServiceException;
 
 }

@@ -1,46 +1,52 @@
 package by.epamtc.dubovik.shop.entity;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
-public class Order extends Entity {
+public class Order implements Serializable {
 	private static final long serialVersionUID = -3747621069091964608L;
 	
-	private int id;
-	private int userId;
-	private int orderStatusId;
+	private long id;
+	private long userId;
+	private long orderStatusId;
 	private List<OrderToProduct> sales;
-	private Timestamp date;
-
-	public int getId() {
+	//private Timestamp date;
+	private LocalDateTime date;
+	
+	public Order() {}
+	
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 	
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 
-	public int getOrderStatusId() {
+	public long getOrderStatusId() {
 		return orderStatusId;
 	}
 	
-	public void setOrderStatusId(int orderStatusId) {
+	public void setOrderStatusId(long orderStatusId) {
 		this.orderStatusId = orderStatusId;
 	}
 
-	public Timestamp getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 	
-	public void setDate(Timestamp date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 	
@@ -64,8 +70,8 @@ public class Order extends Entity {
 		if(this.id == other.getId() &&
 			this.userId == other.getUserId() &&
 			this.orderStatusId == other.getOrderStatusId() &&
-			equalsWithNull(this.date, other.getDate()) &&
-			equalsWithNull(this.sales, other.getSales())) {
+			Objects.equals(this.date, other.getDate()) &&
+			Objects.equals(this.sales, other.getSales())) {
 			return true;
 		}
 		return false;
@@ -75,11 +81,11 @@ public class Order extends Entity {
 	public int hashCode() {
 	int result = 1;
 	int prime = 31;
-		result = result * prime + id;
-		result = result * prime + userId;
-		result = result * prime + orderStatusId;
-		result = result * prime + hashCodeWithNull(date);
-		result = result * prime + hashCodeWithNull(sales);
+		result = result * prime + (int)id;
+		result = result * prime + (int)userId;
+		result = result * prime + (int)orderStatusId;
+		result = result * prime + Objects.hashCode(date);
+		result = result * prime + Objects.hashCode(sales);
 	return result;	
 	}
 	

@@ -1,22 +1,21 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class ProductCategory extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class ProductCategory implements Serializable {
 	private static final long serialVersionUID = 6023233189012694387L;
-	private int id;
+	
+	private long id;
 	private String name;
 
 	public ProductCategory() {};
 
-	public ProductCategory(int id, String name, String description) {
-		this.id = id;
-		this.name = name;
-	}
-
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -38,7 +37,7 @@ public class ProductCategory extends Entity {
 			return false;
 		ProductCategory other = (ProductCategory)o;
 		if(	this.id == other.getId() &&
-			equalsWithNull(this.name, other.getName())) {
+			Objects.equals(this.name, other.getName())) {
 			return true;
 		}
 		return false;
@@ -48,8 +47,8 @@ public class ProductCategory extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
 		return result;
 	}
 

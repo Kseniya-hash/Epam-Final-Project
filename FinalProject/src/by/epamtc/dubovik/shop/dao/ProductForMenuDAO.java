@@ -10,5 +10,6 @@ public interface ProductForMenuDAO {
 	public List<ProductForMenu> findSortedByCommentCount (int offset, int count) throws DAOException;
 	public List<ProductForMenu> findSortedByPriceInc (int offset, int count) throws DAOException;
 	public List<ProductForMenu> findSortedByPriceDesc (int offset, int count) throws DAOException;
+	public int countAll () throws DAOException;
 	
 }

@@ -1,42 +1,27 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class User extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class User implements Serializable {
 	
 	private static final long serialVersionUID = -3709659241419930282L;
-	private int id;
+	private long id;
 	private String phone;
 	private String login;
 	private byte[] password;
 	private String name;
 	private String eMail;
 	private boolean isBlacklisted;
-	private int roleId;
+	private long roleId;
 	
 	public User() {}
 	
-	public User(int id, 
-			String phone, 
-			String login,
-			byte[] password, 
-			String name, 
-			String eMail, 
-			boolean isBlacklisted, 
-			int roleId) {
-		this.id = id;
-		this.phone = phone;
-		this.login = login;
-		this.password = password;
-		this.name = name;
-		this.eMail = eMail;
-		this.isBlacklisted = isBlacklisted;
-		this.roleId = roleId;
-	}
-	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	
@@ -88,11 +73,11 @@ public class User extends Entity {
 		this.isBlacklisted = isBlacklisted;
 	}
 	
-	public int getRoleId() {
+	public long getRoleId() {
 		return roleId;
 	}
 	
-	public void setRoleId(int roleId) {
+	public void setRoleId(long roleId) {
 		this.roleId = roleId;
 	}
 	
@@ -106,11 +91,11 @@ public class User extends Entity {
 			return false;
 		User other = (User)o;
 		if(this.id == other.getId() &&
-				equalsWithNull(this.phone, other.getPhone()) &&
-				equalsWithNull(this.login, other.getLogin()) &&
-				equalsWithNull(this.password, other.getPassword()) &&
-				equalsWithNull(this.name, other.getName()) &&
-				equalsWithNull(this.eMail, other.getEMail()) &&
+				Objects.equals(this.phone, other.getPhone()) &&
+				Objects.equals(this.login, other.getLogin()) &&
+				Objects.equals(this.password, other.getPassword()) &&
+				Objects.equals(this.name, other.getName()) &&
+				Objects.equals(this.eMail, other.getEMail()) &&
 				this.isBlacklisted == other.getIsBlacklisted() &&
 				this.roleId == other.getRoleId()) {
 			return true;
@@ -122,14 +107,14 @@ public class User extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(phone);
-		result = result * prime + hashCodeWithNull(login);
-		result = result * prime + hashCodeWithNull(password);
-		result = result * prime + hashCodeWithNull(name);
-		result = result * prime + hashCodeWithNull(eMail);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(phone);
+		result = result * prime + Objects.hashCode(login);
+		result = result * prime + Objects.hashCode(password);
+		result = result * prime + Objects.hashCode(name);
+		result = result * prime + Objects.hashCode(eMail);
 		result = result * prime + (isBlacklisted ? 1 : 0);
-		result = result * prime + roleId;
+		result = result * prime + (int)roleId;
 		return result;
 	}
 

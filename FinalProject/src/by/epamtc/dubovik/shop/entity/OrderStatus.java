@@ -1,22 +1,20 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class OrderStatus extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class OrderStatus implements Serializable {
 	private static final long serialVersionUID = -7304616662620199753L;
-	private int id;
+	private long id;
 	private String name;
 
 	public OrderStatus() {};
 
-	public OrderStatus(int id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -38,7 +36,7 @@ public class OrderStatus extends Entity {
 			return false;
 		OrderStatus other = (OrderStatus)o;
 		if(this.id == other.getId() &&
-				equalsWithNull(this.name, other.getName())) {
+				Objects.equals(this.name, other.getName())) {
 			return true;
 		}
 		return false;
@@ -48,8 +46,8 @@ public class OrderStatus extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
 		return result;
 	}
 

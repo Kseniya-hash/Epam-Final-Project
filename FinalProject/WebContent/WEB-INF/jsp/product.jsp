@@ -85,6 +85,7 @@
 			</c:if>
 		</div>
 	</div>
+	
 	<div class="row">
 		<div class="col-md-2">
 			<form name="addToCart" method="POST" action="Controller">
@@ -110,7 +111,7 @@
 	</div>
 	<hr>
 	
-	
+	<h3><fmt:message key ="comments"/></h3>
 	<ul class="list-unstyled">
 		<c:forEach var = "comment" items="${ comments }">
 			<li class="media">
@@ -143,14 +144,10 @@
 			</c:forEach>
 			<textarea class="form-control" name="comment_text"></textarea>
 			<br>
-			<button type="submit" class="btn btn-primary float-right btn-sm">Добавить комментарий</button>
+			<button type="submit" class="btn btn-primary float-right btn-sm"><fmt:message key ="addcomment"/></button>
 			<br>
 		</form>
-	</c:if>
-	
-	
-	
-	
+	</c:if>	
 </div>
 <c:import url="fragment\footer.jsp" charEncoding="utf-8"/>
 </fmt:bundle>

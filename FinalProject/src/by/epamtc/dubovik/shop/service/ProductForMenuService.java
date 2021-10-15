@@ -8,6 +8,7 @@ import by.epamtc.dubovik.shop.service.impl.sortproduct.SortType;
 
 public interface ProductForMenuService {
 
-	public List<ProductForMenu> takeSortedList(SortType type, int page) throws ServiceException;
+	public List<ProductForMenu> takeSortedList(SortType type, int page, int count) throws ServiceException;
+	public int countAll() throws ServiceException;
 	
 }

@@ -1,20 +1,25 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class ProductForCart extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class ProductForCart implements Serializable {
 	
 	private static final long serialVersionUID = -6862433718211217214L;
-	private int id;
+	private long id;
 	private String name;
 	private String productCategory;
 	private int rating;
 	private int sellingPrice;
 	private int quantity;
 	
-	public int getId() {
+	public ProductForCart() {}
+	
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -68,8 +73,8 @@ public class ProductForCart extends Entity {
 			return false;
 		ProductForCart other = (ProductForCart)o;
 		if(	this.id == other.getId() &&
-			equalsWithNull(this.name, other.getName()) &&
-			equalsWithNull(this.productCategory, other.getProductCategory()) &&
+			Objects.equals(this.name, other.getName()) &&
+			Objects.equals(this.productCategory, other.getProductCategory()) &&
 			this.rating == other.getRating() &&
 			this.sellingPrice == other.getSellingPrice() &&
 					this.quantity == other.getQuantity()) {
@@ -82,9 +87,9 @@ public class ProductForCart extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
-		result = result * prime + hashCodeWithNull(productCategory);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
+		result = result * prime + Objects.hashCode(productCategory);
 		result = result * prime + rating;
 		result = result * prime + sellingPrice;
 		result = result * prime + quantity;

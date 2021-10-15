@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean blacklistUser(int userId) throws ServiceException {
+	public boolean blacklistUser(long userId) throws ServiceException {
 		boolean isBlacklisted = false;
 		DAOFactory factory = DAOFactory.getInstance();
 		UserDAO userDAO = factory.getUserDAO();

@@ -1,6 +1,6 @@
 package by.epamtc.dubovik.shop.service.exception;
 
-public class InvalidException extends Throwable {
+public class InvalidException extends Exception {
 
 	private static final long serialVersionUID = 3571734800575510157L;
 

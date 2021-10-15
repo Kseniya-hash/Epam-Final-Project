@@ -1,6 +1,6 @@
 package by.epamtc.dubovik.shop.service.impl;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import by.epamtc.dubovik.shop.dao.DAOException;
 import by.epamtc.dubovik.shop.dao.PriceDAO;
@@ -14,7 +14,7 @@ import by.epamtc.dubovik.shop.service.validation.factory.ValidationFactory;
 public class PriceServiceImpl implements PriceService {
 
 	@Override
-	public Price takePriceByProduct(int productId) throws ServiceException {
+	public Price takePriceByProduct(long productId) throws ServiceException {
 		PriceDAO priceDAO = DAOFactory.getInstance().getPriceDAO();
 		Price price = null;
 		try {
@@ -26,7 +26,7 @@ public class PriceServiceImpl implements PriceService {
 	}
 
 	@Override
-	public Price takePriceByProduct(int productId, Timestamp date) throws ServiceException {
+	public Price takePriceByProduct(long productId, LocalDateTime date) throws ServiceException {
 		PriceDAO priceDAO = DAOFactory.getInstance().getPriceDAO();
 		Price price = null;
 		try {

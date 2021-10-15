@@ -11,7 +11,7 @@ public class CartValidationImpl implements CartValidation {
 	public boolean isValid(Cart cart) {
 		boolean isValid = (cart != null);
 		if(cart != null) {
-			for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
+			for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
 				if(entry.getValue() < 0) {
 					isValid = false;
 					break;

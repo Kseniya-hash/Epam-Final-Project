@@ -15,7 +15,7 @@ import by.epamtc.dubovik.shop.service.validation.factory.ValidationFactory;
 public class CommentServiceImpl implements CommentService {
 
 	@Override
-	public List<Comment> takeComments(int productId) throws ServiceException {
+	public List<Comment> takeComments(long productId) throws ServiceException {
 		CommentDAO commentDAO = DAOFactory.getInstance().getCommentDAO();
 		List<Comment> comments = null;
 		try {

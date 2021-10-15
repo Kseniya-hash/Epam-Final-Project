@@ -7,16 +7,16 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 
 public interface OrderService {
 	
-	public boolean makeOrder(int userId, Cart cart) throws ServiceException, InvalidException;
+	public boolean makeOrder(long userId, Cart cart) throws ServiceException, InvalidException;
 	
-	public Order takeOrderById(int orderId) throws ServiceException;
+	public Order takeOrderById(long orderId) throws ServiceException;
 	
-	public int calculatePrice(int orderId) throws ServiceException, InvalidException;
+	public int calculatePrice(long orderId) throws ServiceException, InvalidException;
 	
 	public int calculatePrice(Order order) throws ServiceException, InvalidException;
 	
-	public boolean payForOrder(int orderId, long card) throws ServiceException, InvalidException;
+	public boolean payForOrder(long orderId, long card) throws ServiceException, InvalidException;
 
-	boolean deliverOrder(int orderId) throws ServiceException, InvalidException;
+	boolean deliverOrder(long orderId) throws ServiceException, InvalidException;
 
 }

@@ -18,5 +18,7 @@ public interface RequestUtil {
 	public Integer takePriceValue(HttpServletRequest request, String paramName);
 	
 	public void transferParametersFromRequest(HttpServletRequest request, Product product);
+	
+	public int currentPage(Integer currentPage, int lastPage);
 
 }

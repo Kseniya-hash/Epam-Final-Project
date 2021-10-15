@@ -1,23 +1,22 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class Role extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Role implements Serializable {
 	
 	private static final long serialVersionUID = -3626559945906321396L;
-	private int id;
+	
+	private long id;
 	private String name;
 	
 	public Role() {};
-
-	public Role(int id, String name) {
-		this.id = id;
-		this.name = name;
-	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -38,7 +37,7 @@ public class Role extends Entity {
 		if(this.getClass() != o.getClass())
 			return false;
 		Role other = (Role)o;
-		if(this.id == other.getId() && equalsWithNull(this.name, other.getName())) {
+		if(this.id == other.getId() && Objects.equals(this.name, other.getName())) {
 			return true;
 		}
 		return false;
@@ -48,8 +47,8 @@ public class Role extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + id;
-		result = result * prime + hashCodeWithNull(name);
+		result = result * prime + (int)id;
+		result = result * prime + Objects.hashCode(name);
 		return result;
 	}
 

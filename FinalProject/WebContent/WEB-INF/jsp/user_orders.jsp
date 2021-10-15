@@ -8,37 +8,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <title>
-	<!-- <fmt:bundle basename="resources.pagecontent" prefix="list.">
-		<fmt:message key="products"/>
-	</fmt:bundle> -->
-	Orders
+	<fmt:bundle basename="resources.pagecontent" prefix="header.">
+		<fmt:message key="myorders"/>
+	</fmt:bundle>
 </title>
 </head>
 <body>
 	<c:import url="fragment\header.jsp" charEncoding="utf-8"/>
-<fmt:bundle basename="resources.pagecontent" prefix="list.">
+<fmt:bundle basename="resources.pagecontent" prefix="order.">
 	<div class="container">
 		
 		<c:forEach var="elem" items="${ orders }">
 			<div class="row">
 				<div class="col-md-10">
 				
-					Номер заказа:
+					<fmt:message key="ordernumber"/>
 					<c:out value="${ elem.id }"/><br/>
-					Дата заказа:
+					<fmt:message key="orderdate"/>
 					<fmt:formatDate value="${ elem.date }" type="both" timeStyle="short"/><br/>
 					<p class="text-danger font-weight-bold">
-						Статус: <c:out value="${ elem.orderStatus }"/>
+						<fmt:message key="status"/><c:out value="${ elem.orderStatus }"/>
 					</p><br/>
 					<c:forEach var="sale" items="${ elem.sales }">
 						<c:url value ="Controller?command=show_product&product_id=${ sale.productId }" var="productUrl"/>
 						<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ sale.productName }"/></a><br/>
 						<div class="row">
 							<div class="col-md-5">
-								Заказано: <c:out value="${ sale.quantity }"/>
+								<fmt:message key="ordered"/> <c:out value="${ sale.quantity }"/>
 							</div>
 							<div class="col-md-5">
-								Цена:
+								<fmt:message key="price"/>
 								<fmt:formatNumber value="${ sale.price/100 }" type="currency"/>
 							</div>
 							</br>
@@ -53,7 +52,7 @@
     						<button type="submit" 
     							class="btn btn-primary" 
     							name="order_id" 
-   								value = ${ elem.id }>Оплатить</button>
+   								value = ${ elem.id }><fmt:message key="pay"/></button>
     						</form>
 					</c:if>
 				</div>

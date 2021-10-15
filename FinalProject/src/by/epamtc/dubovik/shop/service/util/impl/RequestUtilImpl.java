@@ -5,11 +5,11 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import by.epamtc.dubovik.shop.controller.ParameterName;
 import by.epamtc.dubovik.shop.entity.Product;
 import by.epamtc.dubovik.shop.entity.UserLogged;
 import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
 import by.epamtc.dubovik.shop.service.util.RequestUtil;
-import by.epamtc.dubovik.shop.servlet.ParameterName;
 
 public class RequestUtilImpl implements RequestUtil {
 	
@@ -69,4 +69,14 @@ public class RequestUtilImpl implements RequestUtil {
 		}
 	}
 
+	public int currentPage(Integer currentPage, int lastPage) {
+		int firstPage = 1;
+		if(currentPage == null || currentPage < firstPage) {
+			currentPage = firstPage;
+		}
+		if(currentPage != null && currentPage > lastPage) {
+			currentPage = lastPage;
+		}
+		return currentPage;
+	}
 }

@@ -1,28 +1,33 @@
 package by.epamtc.dubovik.shop.entity;
 
-public class OrderToProductForView extends Entity {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class OrderToProductForView implements Serializable {
 
 	private static final long serialVersionUID = 2820851810081335537L;
 	
-	private int orderId;
-	private int productId;
+	private long orderId;
+	private long productId;
 	private String productName;
 	private int quantity;
 	private int price;
 	
-	public int getOrderId() {
+	public OrderToProductForView() {}
+	
+	public long getOrderId() {
 		return orderId;
 	}
 	
-	public void setOrderId(int orderId) {
+	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
 
-	public int getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 	
-	public void setProductId(int productId) {
+	public void setProductId(long productId) {
 		this.productId = productId;
 	}
 	
@@ -61,7 +66,7 @@ public class OrderToProductForView extends Entity {
 		OrderToProductForView other = (OrderToProductForView)o;
 		if(this.orderId == other.getOrderId() &&
 				this.productId == other.getProductId() &&
-				equalsWithNull(this.productName, other.getProductName()) &&
+				Objects.equals(this.productName, other.getProductName()) &&
 				this.quantity == other.getQuantity() &&
 				this.price == other.getPrice()) {
 			return true;
@@ -73,9 +78,9 @@ public class OrderToProductForView extends Entity {
 	public int hashCode() {
 		int result = 1;
 		int prime = 31;
-		result = result * prime + orderId;
-		result = result * prime + productId;
-		result = result * prime + hashCodeWithNull(productName);
+		result = result * prime + (int)orderId;
+		result = result * prime + (int)productId;
+		result = result * prime + Objects.hashCode(productName);
 		result = result * prime + quantity;
 		result = result * prime + price;
 		return result;

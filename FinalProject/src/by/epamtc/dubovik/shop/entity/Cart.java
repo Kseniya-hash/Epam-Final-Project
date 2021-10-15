@@ -8,21 +8,21 @@ import java.util.Set;
 public class Cart implements Serializable {
 
 	private static final long serialVersionUID = -2431257232103676891L;
-	private Map<Integer, Integer> cart;
+	private Map<Long, Integer> cart;
 	
 	public Cart() {
-		cart = new HashMap<Integer, Integer>();
+		cart = new HashMap<Long, Integer>();
 	}
 
-	public void put(int key, int value) {
+	public void put(long key, int value) {
 		cart.put(key, value);
 	}
 	
-	public Integer get(int key) {
+	public Integer get(long key) {
 		return cart.get(key);
 	}
 	
-	public Integer remove(int key) {
+	public Integer remove(long key) {
 		return cart.remove(key);
 	}
 	
@@ -41,11 +41,11 @@ public class Cart implements Serializable {
 		return cart.toString();
 	}
 	
-	public Set<Map.Entry<Integer, Integer>> entrySet(){
+	public Set<Map.Entry<Long, Integer>> entrySet(){
 		return cart.entrySet();
 	}
 	
-	public boolean containsKey(Integer key) {
+	public boolean containsKey(Long key) {
 		return cart.containsKey(key);
 	}
 }

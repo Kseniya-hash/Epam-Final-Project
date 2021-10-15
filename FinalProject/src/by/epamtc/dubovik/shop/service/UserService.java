@@ -15,6 +15,6 @@ public interface UserService {
 	public boolean register(User user, byte[] passwordRepeat) 
 			throws ServiceException, InvalidException, UserAlreadyExistException;
 	
-	public boolean blacklistUser(int userId) throws ServiceException;
+	public boolean blacklistUser(long userId) throws ServiceException;
 	
 }

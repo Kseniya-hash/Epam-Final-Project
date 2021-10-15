@@ -1,34 +1,38 @@
 package by.epamtc.dubovik.shop.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
-public class OrderForView extends Entity {
+public class OrderForView implements Serializable {
 
 	private static final long serialVersionUID = -6559233986868939722L;
 	
-	private int id;
-	private int userId;
+	private long id;
+	private long userId;
 	private String userLogin;
 	private String userPhone;
 	private boolean isBlacklisted;
-	private Timestamp date;
+	private LocalDateTime date;
 	private String orderStatus;
 	private List<OrderToProductForView> sales;
 	
-	public int getId() {
+	public OrderForView() {}
+	
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 	
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 	
@@ -56,11 +60,11 @@ public class OrderForView extends Entity {
 		this.isBlacklisted = isBlacklisted;
 	}
 	
-	public Timestamp getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 	
-	public void setDate(Timestamp date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
@@ -91,12 +95,12 @@ public class OrderForView extends Entity {
 		OrderForView other = (OrderForView)o;
 		if(this.id == other.getId() &&
 			this.userId == other.getUserId() &&
-			equalsWithNull(this.userLogin, other.getUserLogin()) &&
-			equalsWithNull(this.userPhone, other.getUserPhone()) &&
+			Objects.equals(this.userLogin, other.getUserLogin()) &&
+			Objects.equals(this.userPhone, other.getUserPhone()) &&
 			isBlacklisted == other.getIsBlacklisted() &&
-			equalsWithNull(this.date, other.getDate()) &&
-			equalsWithNull(this.orderStatus, other.getOrderStatus()) &&
-			equalsWithNull(this.sales, other.getSales())) {
+			Objects.equals(this.date, other.getDate()) &&
+			Objects.equals(this.orderStatus, other.getOrderStatus()) &&
+			Objects.equals(this.sales, other.getSales())) {
 			return true;
 		}
 		return false;
@@ -106,14 +110,14 @@ public class OrderForView extends Entity {
 	public int hashCode() {
 	int result = 1;
 	int prime = 31;
-		result = result * prime + id;
-		result = result * prime + userId;
-		result = result * prime + hashCodeWithNull(userLogin);
-		result = result * prime + hashCodeWithNull(userPhone);
+		result = result * prime + (int)id;
+		result = result * prime + (int)userId;
+		result = result * prime + Objects.hashCode(userLogin);
+		result = result * prime + Objects.hashCode(userPhone);
 		result = result * prime + (isBlacklisted? 1 : 0);
-		result = result * prime + hashCodeWithNull(date);
-		result = result * prime + hashCodeWithNull(orderStatus);
-		result = result * prime + hashCodeWithNull(sales);
+		result = result * prime + Objects.hashCode(date);
+		result = result * prime + Objects.hashCode(orderStatus);
+		result = result * prime + Objects.hashCode(sales);
 	return result;	
 	}
 	

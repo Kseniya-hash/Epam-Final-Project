@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,36 +16,19 @@ import by.epamtc.dubovik.shop.entity.ProductCategory;
 
 public class ProductCategoryJDBC implements ProductCategoryDAO {
 	private static final String SQL_SELECT_ALL_BY_PAGES = 
-			"SELECT * FROM `dubovik_Shop`.`product_categories` LIMIT ?,?";
+			"SELECT * FROM product_categories LIMIT ?,?";
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_Shop`.`product_categories` WHERE `pc_id`=?";
+			"SELECT * FROM product_categories WHERE pc_id=?";
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`product_categories` (`unq_pc_name`) VALUES (?)";
-	private static final String SQL_DELETE_BY_ID = 
-			"DELETE FROM `dubovik_Shop`.`product_categories` WHERE `pc_id`=?";
-	private static final String SQL_DELETE_BY_ENTITY = 
-			"DELETE FROM `dubovik_Shop`.`product_categories` "
-			+ "WHERE `pc_id` = ? AND `unq_pc_name` = ?";
+			"INSERT INTO product_categories (unq_pc_name) VALUES (?)";
 	private static final String SQL_UPDATE = 
-			"UPDATE `dubovik_Shop`.`product_categories` "
-			+ "SET `unq_pc_name` = ? WHERE `pc_id` = ?";
+			"UPDATE product_categories "
+			+ "SET unq_pc_name = ? WHERE pc_id = ?";
 	
 	private static final String SQL_SELECT_BY_NAME = 
-			"SELECT * FROM `dubovik_Shop`.`product_categories` WHERE `unq_pc_name`=?";
+			"SELECT * FROM product_categories WHERE unq_pc_name=?";
 	private static final String SQL_SELECT_ALL = 
-			"SELECT * FROM `dubovik_Shop`.`product_categories`";
-	
-	private ProductCategory takeFromResultSet(ResultSet resultSet) throws SQLException {
-		ProductCategory category = null;
-		
-		if (!resultSet.isAfterLast()) {
-			category = new ProductCategory();
-			category.setId(resultSet.getLong(ProductCategoryMapping.ID));
-			category.setName(resultSet.getString(ProductCategoryMapping.NAME));
-		}
-		
-		return category;
-	}
+			"SELECT * FROM product_categories";
 
 	@Override
 	public ProductCategory findById(long id) throws DAOException {
@@ -71,27 +55,6 @@ public class ProductCategoryJDBC implements ProductCategoryDAO {
 	}
 
 	@Override
-	public boolean delete(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ID);
-			st.setLong(1, id);
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
-	}
-
-	@Override
 	public List<ProductCategory> findAll(int offset, int count) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<ProductCategory> productCategories = new ArrayList<>();
@@ -115,28 +78,6 @@ public class ProductCategoryJDBC implements ProductCategoryDAO {
 			pool.closeConnection(cn, st, rs);
 		}
 		return productCategories;
-	}
-
-	@Override
-	public boolean delete(ProductCategory entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ENTITY);
-			st.setLong(1, entity.getId());
-			st.setString(2, entity.getName());
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
 	}
 
 	@Override
@@ -211,13 +152,13 @@ public class ProductCategoryJDBC implements ProductCategoryDAO {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<ProductCategory> productCategories = new ArrayList<>();
 		Connection cn = null;
-		PreparedStatement st = null;
+		Statement st = null;
 		ResultSet rs = null;
 		
 		try {
 			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_ALL);
-			rs = st.executeQuery();
+			st = cn.createStatement();
+			rs = st.executeQuery(SQL_SELECT_ALL);
 			while(rs.next()) {
 				ProductCategory current = takeFromResultSet(rs);
 				productCategories.add(current);
@@ -228,5 +169,17 @@ public class ProductCategoryJDBC implements ProductCategoryDAO {
 			pool.closeConnection(cn, st, rs);
 		}
 		return productCategories;
+	}
+	
+	private ProductCategory takeFromResultSet(ResultSet resultSet) throws SQLException {
+		ProductCategory category = null;
+		
+		if (!resultSet.isAfterLast()) {
+			category = new ProductCategory();
+			category.setId(resultSet.getLong(ProductCategoryMapping.ID));
+			category.setName(resultSet.getString(ProductCategoryMapping.NAME));
+		}
+		
+		return category;
 	}
 }

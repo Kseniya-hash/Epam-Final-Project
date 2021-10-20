@@ -17,8 +17,8 @@ public final class Page {
 	public static final String CUSTOMER_ORDERS ="/WEB-INF/jsp/customer_orders.jsp";
 	public static final String PAY_ORDER = "/WEB-INF/jsp/pay_for_order.jsp";
 	
-	public static final String ERROR404 = "/error/error404.jsp";
-	public static final String ERROR500 = "/error/error500.jsp";
+	public static final String ERROR404 = "/WEB-INF/jsp/error/error404.jsp";
+	public static final String ERROR500 = "/WEB-INF/jsp/error/error500.jsp";
 	
 	private Page() {};
 }

@@ -64,7 +64,7 @@ public class RequestUtilImpl implements RequestUtil {
 		product.setWidth(requestUtil.takeIntegerWithNull(request, ParameterName.PRODUCT_WIDTH));
 		product.setQuantity(Integer.parseInt(request.getParameter(ParameterName.PRODUCT_QUANTITY)));
 		String photoPath = requestUtil.takeString(request, ParameterName.PRODUCT_PHOTO);
-		if(photoPath != null) {
+		if(photoPath != null && photoPath.length() != 0) {
 			product.setPhotoPath(photoPath);
 		}
 	}

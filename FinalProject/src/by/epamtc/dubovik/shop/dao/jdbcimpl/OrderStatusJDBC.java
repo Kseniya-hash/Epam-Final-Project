@@ -15,27 +15,13 @@ import by.epamtc.dubovik.shop.entity.OrderStatus;
 
 public class OrderStatusJDBC implements OrderStatusDAO {
 	private static final String SQL_SELECT_ALL = 
-			"SELECT * FROM `dubovik_Shop`.`order_statuses` LIMIT ?,?";
+			"SELECT * FROM order_statuses LIMIT ?,?";
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_Shop`.`order_statuses` WHERE `os_id`=?";
+			"SELECT * FROM order_statuses WHERE os_id=?";
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`order_statuses` (`unq_os_name`) VALUES (?)";
-	private static final String SQL_DELETE_BY_ID = 
-			"DELETE FROM `dubovik_Shop`.`order_statuses` WHERE `os_id`=?";
-	private static final String SQL_DELETE_BY_ENTITY = 
-			"DELETE FROM `dubovik_Shop`.`order_statuses` WHERE `os_id` = ? AND `unq_os_name` = ?";
+			"INSERT INTO order_statuses (unq_os_name) VALUES (?)";
 	private static final String SQL_UPDATE = 
-			"UPDATE `dubovik_Shop`.`order_statuses` SET `unq_os_name` = ? WHERE `os_id` = ?";
-	
-	private OrderStatus takeFromResultSet(ResultSet resultSet) throws SQLException {
-		OrderStatus status = null;
-		if (!resultSet.isAfterLast()) {
-			status = new OrderStatus();
-			status.setId(resultSet.getLong(OrderStatusMapping.ID));
-			status.setName(resultSet.getString(OrderStatusMapping.NAME));
-		}
-		return status;
-	}
+			"UPDATE order_statuses SET unq_os_name = ? WHERE os_id = ?";
 
 	@Override
 	public OrderStatus findById(long id) throws DAOException {
@@ -62,27 +48,6 @@ public class OrderStatusJDBC implements OrderStatusDAO {
 	}
 
 	@Override
-	public boolean delete(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ID);
-			st.setLong(1, id);
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
-	}
-
-	@Override
 	public List<OrderStatus> findAll(int offset, int count) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<OrderStatus> statuses= new ArrayList<>();
@@ -106,28 +71,6 @@ public class OrderStatusJDBC implements OrderStatusDAO {
 			pool.closeConnection(cn, st, rs);
 		}
 		return statuses;
-	}
-
-	@Override
-	public boolean delete(OrderStatus entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ENTITY);
-			st.setLong(1, entity.getId());
-			st.setString(2, entity.getName());
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
 	}
 
 	@Override
@@ -171,6 +114,16 @@ public class OrderStatusJDBC implements OrderStatusDAO {
 			pool.closeConnection(cn, st);
 		}
 		return flag;
+	}
+	
+	private OrderStatus takeFromResultSet(ResultSet resultSet) throws SQLException {
+		OrderStatus status = null;
+		if (!resultSet.isAfterLast()) {
+			status = new OrderStatus();
+			status.setId(resultSet.getLong(OrderStatusMapping.ID));
+			status.setName(resultSet.getString(OrderStatusMapping.NAME));
+		}
+		return status;
 	}
 
 }

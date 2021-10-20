@@ -1,8 +1,8 @@
 package by.epamtc.dubovik.shop.dao;
 
-import by.epamtc.dubovik.shop.dao.generic.GenericIntIdDAO;
+import by.epamtc.dubovik.shop.dao.generic.GenericDAO;
 import by.epamtc.dubovik.shop.entity.Role;
 
-public interface RoleDAO extends GenericIntIdDAO<Role> {
+public interface RoleDAO extends GenericDAO<Role> {
 
 }

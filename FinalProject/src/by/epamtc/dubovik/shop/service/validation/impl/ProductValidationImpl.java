@@ -15,7 +15,7 @@ public class ProductValidationImpl implements ProductValidation {
 				isValidValue(product.getWeight()) &&
 				product.getQuantity() >= 0 &&
 				isValidImage(product.getPhotoPath());
-				
+		
 		return isValid;
 	}
 	

@@ -14,58 +14,28 @@ import by.epamtc.dubovik.shop.dao.DAOException;
 import by.epamtc.dubovik.shop.dao.OrderDAO;
 import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.OrderMapping;
 import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.OrderToProductMapping;
-import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.PriceLogMapping;
-import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.ProductMapping;
 import by.epamtc.dubovik.shop.entity.Order;
-import by.epamtc.dubovik.shop.entity.OrderForView;
 import by.epamtc.dubovik.shop.entity.OrderToProduct;
-import by.epamtc.dubovik.shop.entity.OrderToProductForView;
-
 public class OrderJDBC implements OrderDAO {
 	
-	private final static String CREATE_CREATE_ORDER = "INSERT INTO `dubovik_shop`.`orders` " +
-			"(`o_u_id`,`o_os_id`,`o_date`) " +
+	private final static String CREATE_CREATE_ORDER = "INSERT INTO orders " +
+			"(o_u_id,o_os_id,o_date) " +
 			"VALUES ( ?, ?,NOW());";
-	private final static String CREATE_TAKE_PRODUCTS = "UPDATE `dubovik_shop`.`products` "
+	private final static String CREATE_TAKE_PRODUCTS = "UPDATE products "
 			+ "SET p_quantity = p_quantity - ? WHERE p_id = ?;";
-	private final static String CREATE_ADD_SALE = " INSERT INTO `dubovik_shop`.`sales` (`s_o_id`,`s_p_id`,`s_quantity`)"
-			+ " VALUES ((SELECT max(LAST_INSERT_ID()) FROM `dubovik_shop`.`orders`), ?,?);";
+	private final static String CREATE_ADD_SALE = " INSERT INTO sales (s_o_id,s_p_id,s_quantity)"
+			+ " VALUES ((SELECT max(LAST_INSERT_ID()) FROM orders), ?,?);";
 
-	private final static String SQL_SELECT_BY_ID = "SELECT * FROM `dubovik_shop`.`orders` WHERE `o_id` = ?";
+	private final static String SQL_SELECT_BY_ID = "SELECT * FROM orders WHERE o_id = ?";
+	
+	private final static String SQL_SELECT_ALL = "SELECT * FROM orders LIMIT ?, ?";
 	
 	private static final String SQL_SELECT_SALE = 
-			"SELECT * FROM `dubovik_shop`.`sales` WHERE s_o_id = ?;";
+			"SELECT * FROM sales WHERE s_o_id = ?;";
 	
 	private static final String SQL_UPDATE =
-			"UPDATE `dubovik_Shop`.`orders` SET `o_u_id` = ?, `o_os_id` = ?, `o_date` = ?"
-					+ " WHERE `o_id` = ?";
-	
-	private Order takeFromResultSet(ResultSet resultSet) throws SQLException {
-		Order order = null;
-		
-		if (!resultSet.isAfterLast()) {
-			order = new Order();
-			order.setId(resultSet.getLong(OrderMapping.ID));
-			order.setUserId(resultSet.getLong(OrderMapping.USER_ID));
-			order.setOrderStatusId(resultSet.getLong(OrderMapping.ORDER_STATUS));
-			order.setDate(resultSet.getTimestamp(OrderMapping.DATE).toLocalDateTime());
-		}
-		
-		return order;
-	}
-	
-	private OrderToProduct takeSaleFromResultSet(ResultSet resultSet) throws SQLException {
-		OrderToProduct sale = null;
-		
-		if (!resultSet.isAfterLast()) {
-			sale = new OrderToProduct();
-			sale.setOrderId(resultSet.getLong(OrderToProductMapping.ORDER_ID));
-			sale.setProductId(resultSet.getLong(OrderToProductMapping.PRODUCT_ID));
-			sale.setQuantity(resultSet.getInt(OrderToProductMapping.QUANTITY));
-		}
-		
-		return sale;
-	}
+			"UPDATE orders SET o_u_id = ?, o_os_id = ?, o_date = ?"
+					+ " WHERE o_id = ?";
 	
 	@Override
 	public Order findById(long id) throws DAOException {
@@ -117,23 +87,60 @@ public class OrderJDBC implements OrderDAO {
 	}
 
 	@Override
-	public boolean delete(long id) throws DAOException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public List<Order> findAll(int offset, int count) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		ConnectionPool pool = ConnectionPool.getInstance();
+		List<Order> orders= new ArrayList<>();
+		Connection cn = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			cn = pool.takeConnection();
+			st = cn.prepareStatement(SQL_SELECT_ALL);
+			st.setInt(1, offset);
+			st.setInt(2, count);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				Order currentOrder = takeFromResultSet(rs);
+				List<OrderToProduct> sales = takeSales(currentOrder);
+				currentOrder.setSales(sales);
+				orders.add(currentOrder);
+			}
+		} catch(SQLException e) {
+			throw new DAOException(e); 
+		} finally {
+			pool.closeConnection(cn, st, rs);
+		}
+		return orders;
 	}
-
-	@Override
-	public boolean delete(Order entity) throws DAOException {
-		// TODO Auto-generated method stub
-		return false;
+	
+	private Order takeFromResultSet(ResultSet resultSet) throws SQLException {
+		Order order = null;
+		
+		if (!resultSet.isAfterLast()) {
+			order = new Order();
+			order.setId(resultSet.getLong(OrderMapping.ID));
+			order.setUserId(resultSet.getLong(OrderMapping.USER_ID));
+			order.setOrderStatusId(resultSet.getLong(OrderMapping.ORDER_STATUS));
+			order.setDate(resultSet.getTimestamp(OrderMapping.DATE).toLocalDateTime());
+		}
+		
+		return order;
 	}
-
+	
+	private OrderToProduct takeSaleFromResultSet(ResultSet resultSet) throws SQLException {
+		OrderToProduct sale = null;
+		
+		if (!resultSet.isAfterLast()) {
+			sale = new OrderToProduct();
+			sale.setOrderId(resultSet.getLong(OrderToProductMapping.ORDER_ID));
+			sale.setProductId(resultSet.getLong(OrderToProductMapping.PRODUCT_ID));
+			sale.setQuantity(resultSet.getInt(OrderToProductMapping.QUANTITY));
+		}
+		
+		return sale;
+	}
+	
 	@Override
 	public boolean create(Order entity) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();

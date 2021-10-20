@@ -22,14 +22,12 @@ public class ShowUserOrdersCommand implements ActionCommand {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		OrderForViewService orderForViewService = ServiceFactory.getInstance().getOrderForViewService();
 		List<OrderForView> orders = null;
-		
 		HttpSession session = request.getSession();
 		UserLogged user = (UserLogged)session.getAttribute(ParameterName.USER);
 		String page = null;
 		try {
 			orders = orderForViewService.takeOrders(user.getId());
 			request.setAttribute(ParameterName.ORDERS, orders);
-			
 			page = Page.USER_ORDERS;
 		} catch (ServiceException e) {
 			page = Page.ERROR500;

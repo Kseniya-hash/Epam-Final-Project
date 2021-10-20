@@ -17,7 +17,7 @@
 <body>
 	<c:import url="fragment\header.jsp" charEncoding="utf-8"/>
 <fmt:bundle basename="resources.pagecontent" prefix="order.">
-	<div class="container">
+	  <div class="container">
 		
 		<c:forEach var="elem" items="${ orders }">
 			<div class="row">
@@ -26,7 +26,8 @@
 					<fmt:message key="ordernumber"/>
 					<c:out value="${ elem.id }"/><br/>
 					<fmt:message key="orderdate"/>
-					<fmt:formatDate value="${ elem.date }" type="both" timeStyle="short"/><br/>
+					<fmt:parseDate value="${ elem.date }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
+					<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDate }"/><br/>
 					<c:out value="${ elem.userLogin }"/><br/>
 					<c:out value="${ elem.userPhone }"/><br/>
 					<p class="text-danger font-weight-bold">

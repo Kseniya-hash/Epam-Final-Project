@@ -16,43 +16,30 @@ import by.epamtc.dubovik.shop.entity.Price;
 public class PriceJDBC implements PriceDAO {
 	
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`price_logs` "
-			+ "(`pl_p_id`, `pl_purchase_price`, `pl_selling_price`, `pl_date`) "
+			"INSERT INTO price_logs "
+			+ "(pl_p_id, pl_purchase_price, pl_selling_price, pl_date) "
 			+ "VALUES (?,?,?, NOW())";
 	
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_shop`.`price_logs` pl " + 
+			"SELECT * FROM price_logs pl " + 
 					"INNER JOIN ( " + 
-					"SELECT `pl_p_id`, MAX(`pl_date`) AS `pl_date` " + 
-					"FROM `dubovik_shop`.`price_logs` GROUP BY `pl_p_id`) " + 
-					"AS max USING (`pl_p_id`, `pl_date`) where `pl_id` = ?";
+					"SELECT pl_p_id, MAX(pl_date) AS pl_date " + 
+					"FROM price_logs GROUP BY pl_p_id) " + 
+					"AS max USING (pl_p_id, pl_date) where pl_id = ?";
 	
 	private static final String SQL_SELECT_BY_PRODUCT_ID = 
-			"SELECT * FROM `dubovik_shop`.`price_logs` pl " + 
+			"SELECT * FROM price_logs pl " + 
 					"INNER JOIN ( " + 
-					"SELECT `pl_p_id`, MAX(`pl_date`) AS `pl_date` " + 
-					"FROM `dubovik_shop`.`price_logs` GROUP BY `pl_p_id`) " + 
-					"AS max USING (`pl_p_id`, `pl_date`) where `pl_p_id` = ?";
+					"SELECT pl_p_id, MAX(pl_date) AS pl_date " + 
+					"FROM price_logs GROUP BY pl_p_id) " + 
+					"AS max USING (pl_p_id, pl_date) where pl_p_id = ?";
 	
 	private static final String SQL_SELECT_BY_PRODUCT_ID_AND_DATE = 
-			"SELECT * FROM `dubovik_shop`.`price_logs` pl " + 
+			"SELECT * FROM price_logs pl " + 
 					"INNER JOIN ( " + 
-					"SELECT `pl_p_id`, MAX(`pl_date`) AS `pl_date` " + 
-					"FROM `dubovik_shop`.`price_logs` WHERE `pl_date` <= ? GROUP BY `pl_p_id`) " + 
-					"AS max USING (`pl_p_id`, `pl_date`) where `pl_p_id` = ?";
-	
-	private Price takeFromResultSet(ResultSet resultSet) throws SQLException {
-		Price price = null;
-		if (!resultSet.isAfterLast()) {
-			price = new Price();
-			price.setId(resultSet.getLong(PriceLogMapping.ID));
-			price.setProductId(resultSet.getLong(PriceLogMapping.PRODUCT_ID));
-			price.setPurchasePrice(resultSet.getInt(PriceLogMapping.PURCHASE_PRICE));
-			price.setSellingPrice(resultSet.getInt(PriceLogMapping.SELLING_PRICE));
-		}
-		
-		return price;
-	}
+					"SELECT pl_p_id, MAX(pl_date) AS pl_date " + 
+					"FROM price_logs WHERE pl_date <= ? GROUP BY pl_p_id) " + 
+					"AS max USING (pl_p_id, pl_date) where pl_p_id = ?";
 	
 	@Override
 	public Price findById(long id) throws DAOException {
@@ -147,6 +134,19 @@ public class PriceJDBC implements PriceDAO {
 		} finally {
 			pool.closeConnection(cn, st, rs);
 		}
+		return price;
+	}
+	
+	private Price takeFromResultSet(ResultSet resultSet) throws SQLException {
+		Price price = null;
+		if (!resultSet.isAfterLast()) {
+			price = new Price();
+			price.setId(resultSet.getLong(PriceLogMapping.ID));
+			price.setProductId(resultSet.getLong(PriceLogMapping.PRODUCT_ID));
+			price.setPurchasePrice(resultSet.getInt(PriceLogMapping.PURCHASE_PRICE));
+			price.setSellingPrice(resultSet.getInt(PriceLogMapping.SELLING_PRICE));
+		}
+		
 		return price;
 	}
 }

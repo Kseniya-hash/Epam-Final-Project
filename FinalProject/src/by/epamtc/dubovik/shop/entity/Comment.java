@@ -16,6 +16,20 @@ public class Comment implements Serializable {
 	
 	public Comment() {}
 	
+	public Comment(long id,
+			long userId,
+			String userLogin,
+			long productId,
+			String text,
+			Integer rating) {
+		this.id = id;
+		this.userId = userId;
+		this.userLogin = userLogin;
+		this.productId = productId;
+		this.text = text;
+		this.rating = rating;
+	}
+	
 	public long getId() {
 		return id;
 	}

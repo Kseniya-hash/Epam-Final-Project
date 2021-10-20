@@ -12,27 +12,13 @@ import by.epamtc.dubovik.shop.entity.Role;
 
 public class RoleJDBC implements RoleDAO {
 	private static final String SQL_SELECT_ALL = 
-			"SELECT * FROM `dubovik_Shop`.`roles` LIMIT ?,?";
+			"SELECT * FROM roles LIMIT ?,?";
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_Shop`.`roles` WHERE `r_id`=?";
+			"SELECT * FROM roles WHERE r_id=?";
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`roles` (`unq_r_name`) VALUES (?)";
-	private static final String SQL_DELETE_BY_ID = 
-			"DELETE FROM `dubovik_Shop`.`roles` WHERE `r_id`=?";
-	private static final String SQL_DELETE_BY_ENTITY = 
-			"DELETE FROM `dubovik_Shop`.`roles` WHERE `r_id` = ? AND `unq_r_name` = ?";
+			"INSERT INTO roles (unq_r_name) VALUES (?)";
 	private static final String SQL_UPDATE = 
-			"UPDATE `dubovik_Shop`.`roles` SET `unq_r_name` = ? WHERE `r_id` = ?";
-	
-	private Role takeFromResultSet(ResultSet resultSet) throws SQLException {
-		Role role = null;
-		if (!resultSet.isAfterLast()) {
-			role = new Role();
-			role.setId(resultSet.getLong(RoleMapping.ID));
-			role.setName(resultSet.getString(RoleMapping.NAME));
-		}
-		return role;
-	}
+			"UPDATE roles SET unq_r_name = ? WHERE r_id = ?";
 
 	@Override
 	public List<Role> findAll(int offset, int count) throws DAOException{
@@ -85,49 +71,6 @@ public class RoleJDBC implements RoleDAO {
 	}
 	
 	@Override
-	public boolean delete(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ID);
-			st.setLong(1, id);
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
-	}
-	
-	@Override
-	public boolean delete(Role entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ENTITY);
-			st.setLong(1, entity.getId());
-			st.setString(2, entity.getName());
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
-	}
-	
-	@Override
 	public boolean create(Role entity) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		boolean flag = false;
@@ -168,5 +111,15 @@ public class RoleJDBC implements RoleDAO {
 			pool.closeConnection(cn, st);
 		}
 		return flag;
+	}
+	
+	private Role takeFromResultSet(ResultSet resultSet) throws SQLException {
+		Role role = null;
+		if (!resultSet.isAfterLast()) {
+			role = new Role();
+			role.setId(resultSet.getLong(RoleMapping.ID));
+			role.setName(resultSet.getString(RoleMapping.NAME));
+		}
+		return role;
 	}
 }

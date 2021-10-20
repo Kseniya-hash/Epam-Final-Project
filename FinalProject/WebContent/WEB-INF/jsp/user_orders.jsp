@@ -15,7 +15,7 @@
 </head>
 <body>
 	<c:import url="fragment\header.jsp" charEncoding="utf-8"/>
-<fmt:bundle basename="resources.pagecontent" prefix="order.">
+	<fmt:bundle basename="resources.pagecontent" prefix="order.">
 	<div class="container">
 		
 		<c:forEach var="elem" items="${ orders }">
@@ -25,7 +25,8 @@
 					<fmt:message key="ordernumber"/>
 					<c:out value="${ elem.id }"/><br/>
 					<fmt:message key="orderdate"/>
-					<fmt:formatDate value="${ elem.date }" type="both" timeStyle="short"/><br/>
+					<fmt:parseDate value="${ elem.date }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
+					<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDate }"/><br/>
 					<p class="text-danger font-weight-bold">
 						<fmt:message key="status"/><c:out value="${ elem.orderStatus }"/>
 					</p><br/>
@@ -60,7 +61,7 @@
 			<hr/>
 		</c:forEach>
 	</div>
-	<c:import url="fragment\footer.jsp" charEncoding="utf-8"/>
+	<c:import url="fragment\footer.jsp" charEncoding="utf-8"/> 
 </fmt:bundle>
 </body>
 </html>

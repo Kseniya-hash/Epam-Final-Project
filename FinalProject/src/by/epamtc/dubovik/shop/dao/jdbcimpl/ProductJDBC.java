@@ -16,46 +16,21 @@ import by.epamtc.dubovik.shop.entity.Product;
 public class ProductJDBC implements ProductDAO {
 	
 	private static final String SQL_SELECT_ALL = 
-			"SELECT * FROM `dubovik_Shop`.`products` LIMIT ?,?";
+			"SELECT * FROM products LIMIT ?,?";
 	private static final String SQL_CREATE = 
-			"INSERT INTO `dubovik_Shop`.`products` "
-			+ "(`unq_p_name`, `p_pc_id`, `p_description`, `p_quantity`, "
-			+ "`p_weight`, `p_length`, `p_high`, `p_width`, `p_photopath`) "
+			"INSERT INTO products "
+			+ "(unq_p_name, p_pc_id, p_description, p_quantity, "
+			+ "p_weight, p_length, p_high, p_width, p_photopath) "
 			+ "VALUES (?,?,?,?,?,?,?,?,?)";
-	private static final String SQL_DELETE_BY_ID = 
-			"DELETE FROM `dubovik_Shop`.`products` WHERE `p_id`=?";
-	private static final String SQL_DELETE_BY_ENTITY = 
-			"DELETE FROM `dubovik_Shop`.`products` WHERE `p_id` = ? AND "
-			+ "`unq_p_name` = ? AND `p_pc_id` = ? AND `p_description` = ? AND `p_quantity` = ? "
-			+ "AND `p_weight` = ? AND `p_length` = ? AND `p_high` = ? AND `p_width` = ? AND `p_photopath` = ?";
 	private static final String SQL_UPDATE = 
-			"UPDATE `dubovik_Shop`.`products` "
-			+ "SET `unq_p_name` = ?, `p_pc_id` = ?, `p_description` = ?, `p_quantity` = ?, "
-			+ "`p_weight` = ?, `p_length` = ?, `p_high` = ?, `p_width` = ?, `p_photopath` = ?"
-			+ " WHERE `p_id` = ?";
+			"UPDATE products "
+			+ "SET unq_p_name = ?, p_pc_id = ?, p_description = ?, p_quantity = ?, "
+			+ "p_weight = ?, p_length = ?, p_high = ?, p_width = ?, p_photopath = ?"
+			+ " WHERE p_id = ?";
 	private static final String SQL_SELECT_BY_ID = 
-			"SELECT * FROM `dubovik_Shop`.`products` WHERE `p_id`=?";
+			"SELECT * FROM products WHERE p_id=?";
 	private static final String SQL_SELECT_BY_NAME = 
-			"SELECT * FROM `dubovik_Shop`.`products` WHERE `unq_p_name`=?";
-
-	private Product takeFromResultSet(ResultSet resultSet) throws SQLException {
-		Product product = null;
-		if (!resultSet.isAfterLast()) {
-			product = new Product();
-			product.setId(resultSet.getLong(ProductMapping.ID));
-			product.setName(resultSet.getString(ProductMapping.NAME));
-			product.setCategoryId(resultSet.getLong(ProductMapping.CATEGORY_ID));
-			product.setDescription(resultSet.getString(ProductMapping.DESCRIPTION));
-			product.setQuantity(resultSet.getInt(ProductMapping.QUANTIY));
-			product.setWeight(takeInteger(resultSet, ProductMapping.WEIGHT));
-			product.setLength(takeInteger(resultSet, ProductMapping.LENGTH));
-			product.setHigh(takeInteger(resultSet, ProductMapping.HIGH));
-			product.setWidth(takeInteger(resultSet, ProductMapping.WIDTH));
-			product.setPhotoPath(resultSet.getString(ProductMapping.PHOTO_PATH));
-		}
-		
-		return product;
-	}
+			"SELECT * FROM products WHERE unq_p_name=?";
 	
 	private Integer takeInteger(ResultSet resultSet, String columnName) throws SQLException {
 		Integer integer = resultSet.getInt(columnName);
@@ -90,27 +65,6 @@ public class ProductJDBC implements ProductDAO {
 	}
 
 	@Override
-	public boolean delete(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ID);
-			st.setLong(1, id);
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
-	}
-
-	@Override
 	public List<Product> findAll(int offset, int count) throws DAOException {
 		ConnectionPool pool = ConnectionPool.getInstance();
 		List<Product> products = new ArrayList<>();
@@ -134,36 +88,6 @@ public class ProductJDBC implements ProductDAO {
 			pool.closeConnection(cn, st, rs);
 		}
 		return products;
-	}
-	
-	@Override
-	public boolean delete(Product entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
-		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_DELETE_BY_ENTITY);
-			st.setLong(1, entity.getId());
-			st.setString(2, entity.getName());
-			st.setLong(3, entity.getCategoryId());
-			st.setString(4, entity.getDescription());
-			st.setInt(5, entity.getQuantity());
-			st.setObject(6, entity.getWeight(), java.sql.Types.INTEGER);
-			st.setObject(7, entity.getLength(), java.sql.Types.INTEGER);
-			st.setObject(8, entity.getHigh(), java.sql.Types.INTEGER);
-			st.setObject(9, entity.getWidth(), java.sql.Types.INTEGER);
-			st.setString(10, entity.getPhotoPath());
-			int result = st.executeUpdate();
-			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
-		}
-		return flag;
 	}
 
 	@Override
@@ -218,7 +142,6 @@ public class ProductJDBC implements ProductDAO {
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
-			System.out.println(e);
 			flag = false;
 		} finally {
 			pool.closeConnection(cn, st);
@@ -247,6 +170,25 @@ public class ProductJDBC implements ProductDAO {
 		} finally {
 			pool.closeConnection(cn, st, rs);
 		}
+		return product;
+	}
+	
+	private Product takeFromResultSet(ResultSet resultSet) throws SQLException {
+		Product product = null;
+		if (!resultSet.isAfterLast()) {
+			product = new Product();
+			product.setId(resultSet.getLong(ProductMapping.ID));
+			product.setName(resultSet.getString(ProductMapping.NAME));
+			product.setCategoryId(resultSet.getLong(ProductMapping.CATEGORY_ID));
+			product.setDescription(resultSet.getString(ProductMapping.DESCRIPTION));
+			product.setQuantity(resultSet.getInt(ProductMapping.QUANTIY));
+			product.setWeight(takeInteger(resultSet, ProductMapping.WEIGHT));
+			product.setLength(takeInteger(resultSet, ProductMapping.LENGTH));
+			product.setHigh(takeInteger(resultSet, ProductMapping.HIGH));
+			product.setWidth(takeInteger(resultSet, ProductMapping.WIDTH));
+			product.setPhotoPath(resultSet.getString(ProductMapping.PHOTO_PATH));
+		}
+		
 		return product;
 	}
 }

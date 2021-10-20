@@ -48,7 +48,6 @@ public class ConnectionPool {
 		} catch(NumberFormatException e) {
 			this.poolSize = DEFAULT_POOL_SIZE;
 		}
-		initPoolData();
 	}
 	
     public static ConnectionPool getInstance(){
@@ -58,7 +57,7 @@ public class ConnectionPool {
         return instance;
     }
 	
-	private void initPoolData() throws ConnectionPoolException {
+	public void initPoolData() throws ConnectionPoolException {
 		Locale.setDefault(Locale.ENGLISH);
 		
 		try {
@@ -82,7 +81,7 @@ public class ConnectionPool {
 			closeConnectrionQueue(givenAwayConnectionQueue);
 			closeConnectrionQueue(inPoolConnectionQueue);
 		} catch (SQLException e){
-			//Logger
+			throw new ConnectionPoolException(e);
 		}
 	}
 	
@@ -110,9 +109,11 @@ public class ConnectionPool {
 	public void closeConnection(Connection con, Statement st, ResultSet rs) {
 		
 		try {
-			rs.close();
+			if(rs != null) {
+				rs.close();
+			}
 		} catch(SQLException e) {
-			//logger
+			throw new ConnectionPoolException(e);
 		}
 		
 		closeConnection(con, st);
@@ -121,15 +122,19 @@ public class ConnectionPool {
 	public void closeConnection(Connection con, Statement st) {
 		
 		try {
-			st.close();
+			if(st != null) {
+				st.close();
+			}
 		} catch(SQLException e) {
-			//logger
+			throw new ConnectionPoolException(e);
 		}
 		
 		try {
-			con.close();
+			if(con != null) {
+				con.close();
+			}
 		} catch(SQLException e) {
-			//logger
+			throw new ConnectionPoolException(e);
 		}
 	}
 	
@@ -162,7 +167,8 @@ public class ConnectionPool {
 						throw new SQLException("Error allocating connection in the pool.");
 			}
 		}
-		// остальные просто оболочки
+		
+		
 		@Override
 		public void clearWarnings() throws SQLException {
 			connection.clearWarnings();

@@ -25,6 +25,9 @@ public class ShowCartCommand implements ActionCommand {
 		String page = Page.CART;
 		HttpSession session = request.getSession();
 		Cart cart = (Cart)session.getAttribute(ParameterName.CART);
+		if(cart == null) {
+			cart = new Cart();
+		}
 		CartService cartService = ServiceFactory.getInstance().getCartService();
 		List<ProductForCart> products = null;
 		

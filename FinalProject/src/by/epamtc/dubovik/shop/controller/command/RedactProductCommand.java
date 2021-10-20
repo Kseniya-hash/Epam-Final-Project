@@ -32,7 +32,6 @@ public class RedactProductCommand implements ActionCommand {
 		
 		Product product = null;
 		String page = null;
-		
 		try {
 			long productId = Long.parseLong(request.getParameter(ParameterName.PRODUCT_ID));
 			product = productService.takeProductInfo(productId);

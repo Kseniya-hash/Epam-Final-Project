@@ -64,20 +64,6 @@
       <filter-name>MultipartFilter</filter-name>
       <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <!--
-    <filter>
-    <display-name>CharsetFilter</display-name>
-    <filter-name>CharsetFilter</filter-name>
-    <filter-class>by.epamtc.dubovik.shop.controller.filter.CharsetFilter</filter-class>
-    <init-param>
-      <param-name>characterEnсoding</param-name>
-      <param-value>utf-8</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>CharsetFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>-->
   
   <filter>
     <display-name>XSSFilter</display-name>

@@ -19,7 +19,7 @@ public class CommentValidationImpl implements CommentValidation {
 	}
 
 	private boolean isValidRating (Integer rating) {
-		return rating == null || (rating >= MIN_RATING && rating <= MAX_RATING);
+		return rating != null && (rating >= MIN_RATING && rating <= MAX_RATING);
 	}
 	
 	private boolean textNotEmpty(String text) {

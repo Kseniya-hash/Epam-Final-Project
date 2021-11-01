@@ -8,6 +8,7 @@ public class UserForLogin implements Serializable {
 	private static final long serialVersionUID = -6875871018369306020L;
 	private String login;
 	private byte[] password;
+	
 	public UserForLogin() {}
 	
 	public UserForLogin(String login, byte[] password) {

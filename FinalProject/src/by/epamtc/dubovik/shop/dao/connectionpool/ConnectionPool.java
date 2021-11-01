@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.connectionpool;
+package by.epamtc.dubovik.shop.dao.connectionpool;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -9,7 +9,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.NClob;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
@@ -104,38 +103,6 @@ public class ConnectionPool {
 			throw new ConnectionPoolException("Error connecting to the data source", e);
 		}
 		return connection;
-	}
-	
-	public void closeConnection(Connection con, Statement st, ResultSet rs) {
-		
-		try {
-			if(rs != null) {
-				rs.close();
-			}
-		} catch(SQLException e) {
-			throw new ConnectionPoolException(e);
-		}
-		
-		closeConnection(con, st);
-	}
-	
-	public void closeConnection(Connection con, Statement st) {
-		
-		try {
-			if(st != null) {
-				st.close();
-			}
-		} catch(SQLException e) {
-			throw new ConnectionPoolException(e);
-		}
-		
-		try {
-			if(con != null) {
-				con.close();
-			}
-		} catch(SQLException e) {
-			throw new ConnectionPoolException(e);
-		}
 	}
 	
 	private class PooledConnection implements Connection {

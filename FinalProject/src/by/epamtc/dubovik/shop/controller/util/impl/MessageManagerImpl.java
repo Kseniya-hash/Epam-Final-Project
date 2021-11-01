@@ -1,7 +1,9 @@
-package by.epamtc.dubovik.shop.service.resource;
+package by.epamtc.dubovik.shop.controller.util.impl;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import by.epamtc.dubovik.shop.controller.util.MessageManager;
 
 public class MessageManagerImpl implements MessageManager {
 	

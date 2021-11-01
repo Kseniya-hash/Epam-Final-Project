@@ -28,7 +28,14 @@ public class Cart implements Serializable {
 	
 	@Override
 	public boolean equals(Object o) {
-		return cart.equals(o);
+		if(cart == o)
+			return true;
+		if(o == null)
+			return false;
+		if(o.getClass() != this.getClass())
+			return false;
+		Cart other = (Cart) o;
+		return cart.equals(other.cart);
 	}
 	
 	@Override

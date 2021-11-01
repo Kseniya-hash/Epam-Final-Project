@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.service.util;
+package by.epamtc.dubovik.shop.controller.util;
 
 
 import javax.servlet.http.HttpServletRequest;

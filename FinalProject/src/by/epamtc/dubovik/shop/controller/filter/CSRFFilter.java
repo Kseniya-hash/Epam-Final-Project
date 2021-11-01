@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import by.epamtc.dubovik.shop.controller.Page;
 import by.epamtc.dubovik.shop.controller.ParameterName;
-import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
+import by.epamtc.dubovik.shop.service.ServiceFactory;
 
 public class CSRFFilter implements Filter {
 

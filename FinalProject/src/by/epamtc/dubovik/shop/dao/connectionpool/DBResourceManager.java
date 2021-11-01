@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.connectionpool;
+package by.epamtc.dubovik.shop.dao.connectionpool;
 
 import java.util.ResourceBundle;
 

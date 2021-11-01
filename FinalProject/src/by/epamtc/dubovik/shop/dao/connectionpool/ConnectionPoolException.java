@@ -1,6 +1,8 @@
-package by.epamtc.dubovik.shop.connectionpool;
+package by.epamtc.dubovik.shop.dao.connectionpool;
 
 public class ConnectionPoolException extends RuntimeException {
+
+	private static final long serialVersionUID = -1327184459528187583L;
 
 	public ConnectionPoolException() {}
 	

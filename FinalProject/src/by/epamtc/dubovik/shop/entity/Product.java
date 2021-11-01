@@ -1,5 +1,6 @@
 package by.epamtc.dubovik.shop.entity;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ public class Product implements Serializable {
 	private Integer high;
 	private Integer width;
 	private String photoPath;
+	private InputStream photoContent;
 	
 	public Product() {}
 
@@ -97,6 +99,14 @@ public class Product implements Serializable {
 	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
 	}
+	
+	public InputStream getPhotoContent() {
+		return photoContent;
+	}
+	
+	public void setPhotoContent(InputStream photoContent) {
+		this.photoContent = photoContent;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -116,7 +126,8 @@ public class Product implements Serializable {
 			Objects.equals(this.length, other.getLength())&&
 			Objects.equals(this.high, other.getHigh())&&
 			Objects.equals(this.width, other.getWidth()) &&
-			Objects.equals(this.photoPath, other.getPhotoPath())) {
+			Objects.equals(this.photoPath, other.getPhotoPath()) &&
+			Objects.equals(this.photoContent, other.getPhotoContent())) {
 			return true;
 		}
 		return false;
@@ -136,6 +147,7 @@ public class Product implements Serializable {
 		result = result * prime + Objects.hashCode(high);
 		result = result * prime + Objects.hashCode(width);
 		result = result * prime + Objects.hashCode(photoPath);
+		result = result * prime + Objects.hashCode(photoContent);
 		return result;
 	}
 
@@ -151,7 +163,8 @@ public class Product implements Serializable {
 		result.append(length + ",");
 		result.append(high + ",");
 		result.append(width + ",");
-		result.append(photoPath);
+		result.append(photoPath + ",");
+		result.append(photoContent);
 		return result.toString();
 	}
 }

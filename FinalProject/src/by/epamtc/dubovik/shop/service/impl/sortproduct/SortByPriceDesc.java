@@ -9,7 +9,7 @@ import by.epamtc.dubovik.shop.entity.ProductForMenu;
 public class SortByPriceDesc implements ProductSort {
 
 	@Override
-	public List<ProductForMenu> takeList(ProductForMenuDAO productForMenuDAO, int offset, int count)
+	public List<ProductForMenu> findList(ProductForMenuDAO productForMenuDAO, int offset, int count)
 			throws DAOException {
 		return productForMenuDAO.findSortedByPriceDesc(offset, count);
 	}

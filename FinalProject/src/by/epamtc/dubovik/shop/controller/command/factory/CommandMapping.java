@@ -12,7 +12,6 @@ public class CommandMapping {
 	public static final String LOGOUT = "logout";
 	public static final String REGISTRATION = "registration";
 	public static final String TO_REGISTRATION_PAGE = "to_registration_page";
-	public static final String WELLCOME = "wellcome";
 	public static final String PRODUCT_SORT = "product_sort";
 	public static final String SHOW_PRODUCT = "show_product";
 	public static final String REDACT_PRODUCT = "redact_product";
@@ -42,7 +41,6 @@ public class CommandMapping {
 		map.put(LOGOUT, new LogoutCommand());
 		map.put(REGISTRATION, new RegistrationCommand());
 		map.put(TO_REGISTRATION_PAGE, new ToRegistrationPageCommand());
-		map.put(WELLCOME, new WellcomeCommand());
 		map.put(PRODUCT_SORT, new ProductSortCommand());
 		map.put(SHOW_PRODUCT, new ShowProductCommand());
 		map.put(REDACT_PRODUCT, new RedactProductCommand());

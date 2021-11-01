@@ -4,19 +4,22 @@ import java.util.List;
 
 import by.epamtc.dubovik.shop.dao.CommentDAO;
 import by.epamtc.dubovik.shop.dao.DAOException;
-import by.epamtc.dubovik.shop.dao.factory.DAOFactory;
+import by.epamtc.dubovik.shop.dao.DAOFactory;
 import by.epamtc.dubovik.shop.entity.Comment;
 import by.epamtc.dubovik.shop.service.CommentService;
 import by.epamtc.dubovik.shop.service.exception.InvalidException;
 import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.validation.CommentValidation;
-import by.epamtc.dubovik.shop.service.validation.factory.ValidationFactory;
+import by.epamtc.dubovik.shop.service.validation.ValidationFactory;
 
 public class CommentServiceImpl implements CommentService {
 
 	@Override
-	public List<Comment> takeComments(long productId) throws ServiceException {
-		CommentDAO commentDAO = DAOFactory.getInstance().getCommentDAO();
+	public List<Comment> findComments(long productId)
+			throws ServiceException {
+		
+		CommentDAO commentDAO = 
+				DAOFactory.getInstance().getCommentDAO();
 		List<Comment> comments = null;
 		try {
 			comments = commentDAO.findByProduct(productId);
@@ -27,8 +30,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public boolean createComment(Comment comment) throws ServiceException, InvalidException {
-		CommentValidation validator = ValidationFactory.getInstance().getCommentValidation();
+	public boolean createComment(Comment comment) 
+			throws InvalidException, ServiceException {
+		
+		CommentValidation validator = 
+				ValidationFactory.getInstance().getCommentValidation();
 		if(!validator.isValid(comment)) {
 			throw new InvalidException("Invalid comment");
 		}

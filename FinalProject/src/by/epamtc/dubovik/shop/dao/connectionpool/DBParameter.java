@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.connectionpool;
+package by.epamtc.dubovik.shop.dao.connectionpool;
 
 public final class DBParameter {
 	private DBParameter() {}

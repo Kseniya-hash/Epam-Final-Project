@@ -1,5 +1,8 @@
-package by.epamtc.dubovik.shop.service.util;
+package by.epamtc.dubovik.shop.controller.util;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import by.epamtc.dubovik.shop.entity.Product;
@@ -13,11 +16,10 @@ public interface RequestUtil {
 	
 	public Integer takeIntegerWithNull(HttpServletRequest request, String paramName);
 	
-	public String takeString(HttpServletRequest request, String paramName);
-	
 	public Integer takePriceValue(HttpServletRequest request, String paramName);
 	
-	public void transferParametersFromRequest(HttpServletRequest request, Product product);
+	public void takeProduct(HttpServletRequest request, Product product) 
+			throws IOException, ServletException;
 	
 	public int currentPage(Integer currentPage, int lastPage);
 

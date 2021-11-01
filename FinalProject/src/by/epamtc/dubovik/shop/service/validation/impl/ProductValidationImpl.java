@@ -7,8 +7,10 @@ public class ProductValidationImpl implements ProductValidation {
 	
 	@Override
 	public boolean isValid(Product product) {
-		boolean isValid = product.getName() != null &&
-				product.getCategoryId() > 0 &&
+		boolean isValid = product != null &&
+				product.getName() != null &&
+				product.getName().length() != 0 &&
+				isValidDescription(product.getDescription()) &&
 				isValidValue(product.getLength()) &&
 				isValidValue(product.getWidth()) &&
 				isValidValue(product.getHigh()) &&
@@ -25,7 +27,11 @@ public class ProductValidationImpl implements ProductValidation {
 	
 	private boolean isValidImage(String path) {
 		String imageFile ="^(.)+\\.(jpg|jpeg|png|gif)$";
-		return path.matches(imageFile);
+		return path != null && path.matches(imageFile);
+	}
+	
+	private boolean isValidDescription(String description) {
+		return description == null || description.length() <= 1000;
 	}
 
 }

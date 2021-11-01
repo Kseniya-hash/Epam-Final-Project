@@ -59,6 +59,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
                 value = scriptPattern.matcher(value).replaceAll("");
             }
         }
+		
         return value;
 	}
 }

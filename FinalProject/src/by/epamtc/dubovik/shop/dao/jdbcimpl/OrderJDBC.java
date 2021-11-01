@@ -1,26 +1,26 @@
-package by.epamtc.dubovik.shop.dao.jdbcimpl;
+ package by.epamtc.dubovik.shop.dao.jdbcimpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.epamtc.dubovik.shop.connectionpool.ConnectionPool;
 import by.epamtc.dubovik.shop.dao.DAOException;
 import by.epamtc.dubovik.shop.dao.OrderDAO;
+import by.epamtc.dubovik.shop.dao.connectionpool.ConnectionPoolException;
+import by.epamtc.dubovik.shop.dao.connectionpool.ConnectionPool;
 import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.OrderMapping;
-import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.OrderToProductMapping;
+import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.SaleMapping;
 import by.epamtc.dubovik.shop.entity.Order;
-import by.epamtc.dubovik.shop.entity.OrderToProduct;
+import by.epamtc.dubovik.shop.entity.Sale;
 public class OrderJDBC implements OrderDAO {
 	
 	private final static String CREATE_CREATE_ORDER = "INSERT INTO orders " +
 			"(o_u_id,o_os_id,o_date) " +
-			"VALUES ( ?, ?,NOW());";
+			"VALUES ( ?, ?, ?);";
 	private final static String CREATE_TAKE_PRODUCTS = "UPDATE products "
 			+ "SET p_quantity = p_quantity - ? WHERE p_id = ?;";
 	private final static String CREATE_ADD_SALE = " INSERT INTO sales (s_o_id,s_p_id,s_quantity)"
@@ -28,7 +28,7 @@ public class OrderJDBC implements OrderDAO {
 
 	private final static String SQL_SELECT_BY_ID = "SELECT * FROM orders WHERE o_id = ?";
 	
-	private final static String SQL_SELECT_ALL = "SELECT * FROM orders LIMIT ?, ?";
+	private final static String SQL_SELECT_ALL = "SELECT * FROM orders ORDER BY o_date DESC LIMIT ?, ?";
 	
 	private static final String SQL_SELECT_SALE = 
 			"SELECT * FROM sales WHERE s_o_id = ?;";
@@ -37,105 +37,103 @@ public class OrderJDBC implements OrderDAO {
 			"UPDATE orders SET o_u_id = ?, o_os_id = ?, o_date = ?"
 					+ " WHERE o_id = ?";
 	
+	private static final ConnectionPool POOL = ConnectionPool.getInstance();
+	
 	@Override
 	public Order findById(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		Order order = null;
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_BY_ID);
+		Order order = null;
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_SELECT_BY_ID)){
 			st.setLong(1, id);
-			rs = st.executeQuery();
-			if(rs.next()) {
-				order = takeFromResultSet(rs);
-				List<OrderToProduct> sales = takeSales(order);
-				order.setSales(sales);
+			try(ResultSet rs = st.executeQuery()){
+				if(rs.next()) {
+					order = takeFromResultSet(rs);
+					List<Sale> sales = takeSales(order);
+					order.setSales(sales);
+				}
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
 		}
 		return order;
 	}
 	
-	private List<OrderToProduct> takeSales(Order order) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		List<OrderToProduct> sales = new ArrayList<>();
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_SALE);
+	private List<Sale> takeSales(Order order)
+			throws DAOException {
+		
+		List<Sale> sales = new ArrayList<>();
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_SELECT_SALE)){
 			st.setLong(1, order.getId());
-			rs = st.executeQuery();
-			while(rs.next()) {
-				OrderToProduct currentSale = takeSaleFromResultSet(rs);
-				sales.add(currentSale);
+			try(ResultSet rs = st.executeQuery()){
+				while(rs.next()) {
+					Sale currentSale = takeSaleFromResultSet(rs);
+					sales.add(currentSale);
+				}
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
 		}
 		return sales;
 	}
 
 	@Override
-	public List<Order> findAll(int offset, int count) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		List<Order> orders= new ArrayList<>();
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
+	public List<Order> findAll(int offset, int count) 
+			throws DAOException {
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_ALL);
+		List<Order> orders= new ArrayList<>();
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_SELECT_ALL)){
 			st.setInt(1, offset);
 			st.setInt(2, count);
-			rs = st.executeQuery();
-			while(rs.next()) {
-				Order currentOrder = takeFromResultSet(rs);
-				List<OrderToProduct> sales = takeSales(currentOrder);
-				currentOrder.setSales(sales);
-				orders.add(currentOrder);
+			try(ResultSet rs = st.executeQuery()){
+				while(rs.next()) {
+					Order currentOrder = takeFromResultSet(rs);
+					List<Sale> sales = takeSales(currentOrder);
+					currentOrder.setSales(sales);
+					orders.add(currentOrder);
+				}
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
 		}
 		return orders;
 	}
 	
-	private Order takeFromResultSet(ResultSet resultSet) throws SQLException {
+	private Order takeFromResultSet(ResultSet resultSet) 
+			throws SQLException {
 		Order order = null;
 		
 		if (!resultSet.isAfterLast()) {
 			order = new Order();
-			order.setId(resultSet.getLong(OrderMapping.ID));
-			order.setUserId(resultSet.getLong(OrderMapping.USER_ID));
-			order.setOrderStatusId(resultSet.getLong(OrderMapping.ORDER_STATUS));
-			order.setDate(resultSet.getTimestamp(OrderMapping.DATE).toLocalDateTime());
+			order.setId(resultSet
+					.getLong(OrderMapping.ID));
+			order.setUserId(resultSet
+					.getLong(OrderMapping.USER_ID));
+			order.setOrderStatusId(resultSet
+					.getLong(OrderMapping.ORDER_STATUS));
+			order.setDate(resultSet
+					.getTimestamp(OrderMapping.DATE).toLocalDateTime());
 		}
 		
 		return order;
 	}
 	
-	private OrderToProduct takeSaleFromResultSet(ResultSet resultSet) throws SQLException {
-		OrderToProduct sale = null;
+	private Sale takeSaleFromResultSet(ResultSet resultSet) 
+			throws SQLException {
+		Sale sale = null;
 		
 		if (!resultSet.isAfterLast()) {
-			sale = new OrderToProduct();
-			sale.setOrderId(resultSet.getLong(OrderToProductMapping.ORDER_ID));
-			sale.setProductId(resultSet.getLong(OrderToProductMapping.PRODUCT_ID));
-			sale.setQuantity(resultSet.getInt(OrderToProductMapping.QUANTITY));
+			sale = new Sale();
+			sale.setOrderId(resultSet
+					.getLong(SaleMapping.ORDER_ID));
+			sale.setProductId(resultSet
+					.getLong(SaleMapping.PRODUCT_ID));
+			sale.setQuantity(resultSet
+					.getInt(SaleMapping.QUANTITY));
 		}
 		
 		return sale;
@@ -143,24 +141,19 @@ public class OrderJDBC implements OrderDAO {
 	
 	@Override
 	public boolean create(Order entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
+		
 		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement createStatement = null;
-		PreparedStatement takeProductsStatement = null;
-		PreparedStatement addSaleStatement = null;
-		try {
-			cn = pool.takeConnection();
+		try (Connection cn = POOL.takeConnection()) {
+			try(PreparedStatement createStatement = cn.prepareStatement(CREATE_CREATE_ORDER);
+				PreparedStatement takeProductsStatement = cn.prepareStatement(CREATE_TAKE_PRODUCTS);
+				PreparedStatement addSaleStatement = cn.prepareStatement(CREATE_ADD_SALE)){
 			cn.setAutoCommit(false);
-			
-			createStatement = cn.prepareStatement(CREATE_CREATE_ORDER);
-			takeProductsStatement = cn.prepareStatement(CREATE_TAKE_PRODUCTS);
-			addSaleStatement = cn.prepareStatement(CREATE_ADD_SALE);
 			
 			createStatement.setLong(1, entity.getUserId());
 			createStatement.setLong(2, entity.getOrderStatusId());
+			createStatement.setTimestamp(3, Timestamp.valueOf(entity.getDate()));
 			createStatement.executeUpdate();
-			for(OrderToProduct sale : entity.getSales()) {
+			for(Sale sale : entity.getSales()) {
 				takeProductsStatement.setInt(1, sale.getQuantity());
 				takeProductsStatement.setLong(2, sale.getProductId());
 				takeProductsStatement.executeUpdate();
@@ -171,39 +164,22 @@ public class OrderJDBC implements OrderDAO {
 			}
 			cn.commit();
 			flag = true;
-		} catch(SQLException e) {
-			try {
+			} catch(SQLException e) {
 				cn.rollback();
-			} catch (SQLException e1) {
-				throw new DAOException(e1);
 			}
-			flag = false;
-		} finally {
-			try {
-				takeProductsStatement.close();
-			} catch(SQLException e) {
-				throw new DAOException(e);
-			}
-			try {
-				addSaleStatement.close();
-			} catch(SQLException e) {
-				throw new DAOException(e);
-			}
-			pool.closeConnection(cn, createStatement);
+		} catch (ConnectionPoolException | SQLException e) {
+			throw new DAOException(e);
 		}
 		return flag;
 	}
 
 	@Override
 	public boolean update(Order entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		Connection cn = null;
-		PreparedStatement st = null;
+		
 		boolean flag = false;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_UPDATE);
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_UPDATE)){
 			st.setLong(1, entity.getUserId());
 			st.setLong(2, entity.getOrderStatusId());
 			st.setTimestamp(3, Timestamp.valueOf(entity.getDate()));
@@ -211,9 +187,7 @@ public class OrderJDBC implements OrderDAO {
 			int result = st.executeUpdate();
 			flag = result > 0;
 		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
+			throw new DAOException(e);
 		}
 		return flag;
 	}

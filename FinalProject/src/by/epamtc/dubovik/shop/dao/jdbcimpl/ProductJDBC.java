@@ -1,5 +1,7 @@
 package by.epamtc.dubovik.shop.dao.jdbcimpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,9 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import by.epamtc.dubovik.shop.connectionpool.ConnectionPool;
+import org.apache.commons.io.FileUtils;
+
 import by.epamtc.dubovik.shop.dao.DAOException;
 import by.epamtc.dubovik.shop.dao.ProductDAO;
+import by.epamtc.dubovik.shop.dao.connectionpool.ConnectionPool;
 import by.epamtc.dubovik.shop.dao.jdbcimpl.mapping.ProductMapping;
 import by.epamtc.dubovik.shop.entity.Product;
 
@@ -32,74 +36,58 @@ public class ProductJDBC implements ProductDAO {
 	private static final String SQL_SELECT_BY_NAME = 
 			"SELECT * FROM products WHERE unq_p_name=?";
 	
-	private Integer takeInteger(ResultSet resultSet, String columnName) throws SQLException {
-		Integer integer = resultSet.getInt(columnName);
-		if(resultSet.wasNull()) {
-			integer = null;
-		}
-		return integer;
-	}
+	private static final ConnectionPool POOL = ConnectionPool.getInstance();
 	
 	@Override
 	public Product findById(long id) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		Product product = null;
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_BY_ID);
+		Product product = null;
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_SELECT_BY_ID)){
 			st.setLong(1, id);
-			rs = st.executeQuery();
-			if(rs.next()) {
-				product = takeFromResultSet(rs);
+			try(ResultSet rs = st.executeQuery()){
+				if(rs.next()) {
+					product = takeFromResultSet(rs);
+				}
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
 		}
 		return product;
 	}
 
 	@Override
 	public List<Product> findAll(int offset, int count) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		List<Product> products = new ArrayList<>();
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_ALL);
+		List<Product> products = new ArrayList<>();
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_SELECT_ALL)){
 			st.setInt(1, offset);
 			st.setInt(2, count);
-			rs = st.executeQuery();
-			while(rs.next()) {
-				Product current = takeFromResultSet(rs);
-				products.add(current);
+			try(ResultSet rs = st.executeQuery()){
+				while(rs.next()) {
+					Product current = takeFromResultSet(rs);
+					products.add(current);
+				}
 			}
 		} catch(SQLException e) {
 			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
 		}
 		return products;
 	}
 
 	@Override
 	public boolean create(Product entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		boolean flag = false;
-		Connection cn = null;
-		PreparedStatement st = null;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_CREATE);
+		boolean flag = false;
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_CREATE)){
+			
+			uploadPhoto(entity);
+			
 			st.setString(1, entity.getName());
 			st.setLong(2, entity.getCategoryId());
 			st.setString(3, entity.getDescription());
@@ -111,24 +99,22 @@ public class ProductJDBC implements ProductDAO {
 			st.setString(9, entity.getPhotoPath());
 			int result = st.executeUpdate();
 			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
+		} catch(SQLException | IOException e) {
+			throw new DAOException(e);
 		}
 		return flag;
 	}
 	
 	@Override
 	public boolean update(Product entity) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		Connection cn = null;
-		PreparedStatement st = null;
+		
 		boolean flag = false;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_UPDATE);
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn.prepareStatement(SQL_UPDATE)){
+			
+			uploadPhoto(entity);
+			
 			st.setString(1, entity.getName());
 			st.setLong(2, entity.getCategoryId());
 			st.setString(3, entity.getDescription());
@@ -141,54 +127,85 @@ public class ProductJDBC implements ProductDAO {
 			st.setLong(10, entity.getId());
 			int result = st.executeUpdate();
 			flag = result > 0;
-		} catch(SQLException e) {
-			flag = false;
-		} finally {
-			pool.closeConnection(cn, st);
+		} catch(SQLException | IOException e) {
+			throw new DAOException(e);
 		}
 		return flag;
 	}
 
 	@Override
 	public Product findByName(String name) throws DAOException {
-		ConnectionPool pool = ConnectionPool.getInstance();
-		Product product = null;
-		Connection cn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
 		
-		try {
-			cn = pool.takeConnection();
-			st = cn.prepareStatement(SQL_SELECT_BY_NAME);
+		Product product = null;
+		
+		try (Connection cn = POOL.takeConnection(); 
+				PreparedStatement st = cn
+						.prepareStatement(SQL_SELECT_BY_NAME)){
 			st.setString(1, name);
-			rs = st.executeQuery();
-			if(rs.next()) {
-				product = takeFromResultSet(rs);
+			try(ResultSet rs = st.executeQuery()){
+				if(rs.next()) {
+					product = takeFromResultSet(rs);
+				}
 			}
 		} catch(SQLException e) {
-			throw new DAOException(e); 
-		} finally {
-			pool.closeConnection(cn, st, rs);
+			throw new DAOException(e);
 		}
 		return product;
 	}
 	
-	private Product takeFromResultSet(ResultSet resultSet) throws SQLException {
+	private boolean uploadPhoto(Product product) 
+			throws IOException {
+		boolean isUploaded = false;
+    	
+		String photoPath = product.getPhotoPath();
+		
+    	if(photoPath != null && photoPath.length() != 0 && 
+    			product.getPhotoContent() != null) {
+    		File targetFile = new File(photoPath);
+    		FileUtils.copyInputStreamToFile(product.getPhotoContent(), targetFile);
+    		String photoName = photoPath.substring(photoPath.lastIndexOf("\\"));
+    		product.setPhotoPath(photoName);
+    		isUploaded = true;
+    	}
+		return isUploaded;
+	}
+	
+	private Product takeFromResultSet(ResultSet resultSet) 
+			throws SQLException {
 		Product product = null;
 		if (!resultSet.isAfterLast()) {
 			product = new Product();
-			product.setId(resultSet.getLong(ProductMapping.ID));
-			product.setName(resultSet.getString(ProductMapping.NAME));
-			product.setCategoryId(resultSet.getLong(ProductMapping.CATEGORY_ID));
-			product.setDescription(resultSet.getString(ProductMapping.DESCRIPTION));
-			product.setQuantity(resultSet.getInt(ProductMapping.QUANTIY));
-			product.setWeight(takeInteger(resultSet, ProductMapping.WEIGHT));
-			product.setLength(takeInteger(resultSet, ProductMapping.LENGTH));
-			product.setHigh(takeInteger(resultSet, ProductMapping.HIGH));
-			product.setWidth(takeInteger(resultSet, ProductMapping.WIDTH));
-			product.setPhotoPath(resultSet.getString(ProductMapping.PHOTO_PATH));
+			product.setId(
+					resultSet.getLong(ProductMapping.ID));
+			product.setName(
+					resultSet.getString(ProductMapping.NAME));
+			product.setCategoryId(
+					resultSet.getLong(ProductMapping.CATEGORY_ID));
+			product.setDescription(
+					resultSet.getString(ProductMapping.DESCRIPTION));
+			product.setQuantity(
+					resultSet.getInt(ProductMapping.QUANTIY));
+			product.setWeight(
+					takeInteger(resultSet, ProductMapping.WEIGHT));
+			product.setLength(
+					takeInteger(resultSet, ProductMapping.LENGTH));
+			product.setHigh(
+					takeInteger(resultSet, ProductMapping.HIGH));
+			product.setWidth(
+					takeInteger(resultSet, ProductMapping.WIDTH));
+			product.setPhotoPath(
+					resultSet.getString(ProductMapping.PHOTO_PATH));
 		}
 		
 		return product;
+	}
+	
+	private Integer takeInteger(ResultSet resultSet, String columnName)
+			throws SQLException {
+		Integer integer = resultSet.getInt(columnName);
+		if(resultSet.wasNull()) {
+			integer = null;
+		}
+		return integer;
 	}
 }

@@ -8,7 +8,6 @@ public class PriceValidationImpl implements PriceValidation {
 	@Override
 	public boolean isValid(Price price) {
 		boolean isValid = price != null &&
-				price.getProductId() > 0 &&
 				price.getPurchasePrice() > 0 &&
 				price.getSellingPrice() > 0;
 		

@@ -1,7 +1,6 @@
 package by.epamtc.dubovik.shop.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -12,11 +11,22 @@ public class Order implements Serializable {
 	private long id;
 	private long userId;
 	private long orderStatusId;
-	private List<OrderToProduct> sales;
-	//private Timestamp date;
 	private LocalDateTime date;
+	private List<Sale> sales;
 	
 	public Order() {}
+	
+	public Order(long id, 
+			long userId,
+			long orderStatusId,
+			LocalDateTime date,
+			List<Sale> sales) {
+		this.id = id;
+		this.userId = userId;
+		this.orderStatusId = orderStatusId;
+		this.date = date;
+		this.sales = sales;
+	}
 	
 	public long getId() {
 		return id;
@@ -50,11 +60,11 @@ public class Order implements Serializable {
 		this.date = date;
 	}
 	
-	public List<OrderToProduct> getSales() {
+	public List<Sale> getSales() {
 		return sales;
 	}
 	
-	public void setSales(List<OrderToProduct> sales) {
+	public void setSales(List<Sale> sales) {
 		this.sales = sales;
 	}
 	

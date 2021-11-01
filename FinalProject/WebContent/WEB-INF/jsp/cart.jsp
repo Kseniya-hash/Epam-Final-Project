@@ -19,7 +19,10 @@
 	<div class="container">
 		<c:forEach var="elem" items="${ products }">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-2">
+					<img src="images${ elem.photoPath }" class="img-fluid" alt="product photo">
+				</div>
+				<div class="col-md-7">
 					<c:url value ="Controller?command=show_product&product_id=${ elem.id }" var="productUrl"/>
 					<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ elem.name }"/></a><br/>
 					<br/>
@@ -27,8 +30,9 @@
 						<fmt:message key="rating"/>
 					<c:out value="${ elem.rating }"/><br/>
 						<fmt:message key="price"/>
-					<c:out value="${ elem.sellingPrice / 100 }"/><br/>
-					<hr/>
+					<fmt:formatNumber value="${ elem.sellingPrice/100 }" 
+									type="currency" 
+									currencyCode ="BYR"/><br/>
 				</div>
 				<div class="col-md-3">
 					<form name="ProductSort" method="POST" action="Controller">
@@ -68,6 +72,7 @@
     				</form>
 				</div>
 			</div>
+			<hr/>
 		</c:forEach>
 		<c:if test="${ not empty products }">
 			<div class="row" align="center">

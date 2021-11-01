@@ -8,7 +8,25 @@ import by.epamtc.dubovik.shop.service.exception.ServiceException;
 
 public interface CommentService {
 	
-	public List<Comment> takeComments(long productId) throws ServiceException;
-	public boolean createComment(Comment comment) throws ServiceException, InvalidException;
+	/**
+	 * Take a list of comments for specific product. 
+	 * If product does not have any comments
+	 * or product does not exist return empty list.
+	 * @param productId - id of specific product
+	 * @return list of comments for specific product
+	 * @throws ServiceException
+	 */
+	public List<Comment> findComments(long productId) 
+			throws ServiceException;
+	
+	/**
+	 * Create comment. If unable to create comment return false
+	 * @param comment
+	 * @return
+	 * @throws InvalidException
+	 * @throws ServiceException
+	 */
+	public boolean createComment(Comment comment) 
+			throws InvalidException, ServiceException;
 
 }

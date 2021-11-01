@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.service.resource;
+package by.epamtc.dubovik.shop.controller.util;
 
 import java.util.Locale;
 

@@ -7,6 +7,6 @@
 <title>Not Found</title>
 </head>
 <body>
-<h2>Resource not found!</h2>
+<h2>Page not found!</h2>
 </body>
 </html>

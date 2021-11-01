@@ -4,7 +4,6 @@ public final class Page {
 	
 	public static final String INDEX = "/index.jsp";
 	public static final String CONTROLLER = "/Controller";
-	public static final String WELLCOME_CONTROLLER = "Controller?command=wellcome";
 	public static final String LOGIN = "/WEB-INF/jsp/login.jsp";
 	public static final String LOGOUT = "/WEB-INF/jsp/logout.jsp";
 	public static final String REGISTRATION = "/WEB-INF/jsp/registration.jsp";

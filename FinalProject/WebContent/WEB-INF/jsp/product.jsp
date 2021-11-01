@@ -15,19 +15,22 @@
 	<h1><c:out value="${ product.name }"/><br/></h1>
 	<div class="row">
 		<div class="col-md-6">
-			<img src="${ product.photoPath }" class="img-fluid" alt="product photo">
+			<img src="images${ product.photoPath }" class="img-fluid" alt="product photo">
 		</div>
 		<div class="col-md-6">
 			<c:choose>
 				<c:when test="${ user.role == 'admin' }">
 					<fmt:message key="sellingprice"/>
-					<fmt:formatNumber value="${ price.sellingPrice/100 }" type="currency"/><br>
+					<fmt:formatNumber value="${ price.sellingPrice/100 }" 
+						type="currency" currencyCode ="BYR"/><br>
 					<fmt:message key="purchaseprice"/> 
-					<fmt:formatNumber value="${ price.purchasePrice/100 }" type="currency"/><br>
+					<fmt:formatNumber value="${ price.purchasePrice/100 }" 
+						type="currency" currencyCode ="BYR"/><br>
 				</c:when>
 				<c:otherwise>
 					<fmt:message key="price"/>
-					<fmt:formatNumber value="${ price.sellingPrice/100 }" type="currency"/><br>
+					<fmt:formatNumber value="${ price.sellingPrice/100 }" 
+						type="currency" currencyCode ="BYR"/><br>
 				</c:otherwise>
 			</c:choose>
 			<c:choose>
@@ -86,8 +89,10 @@
 		</div>
 	</div>
 	
+	<br/>
+	<br/>
 	<div class="row">
-		<div class="col-md-2">
+		<div class="col-md-3">
 			<form name="addToCart" method="POST" action="Controller">
 					<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
   					<input type="hidden" name="command" value="cart_incriment"/>
@@ -140,11 +145,14 @@
 				 <input class="form-check form-check-inline" 
 				 type="radio" 
 				 name="comment_rating"
+				 required
 				 value = "${ currentRating.index }">
 			</c:forEach>
 			<textarea class="form-control" name="comment_text"></textarea>
 			<br>
-			<button type="submit" class="btn btn-primary float-right btn-sm"><fmt:message key ="addcomment"/></button>
+			<button type="submit" class="btn btn-primary float-right btn-sm">
+				<fmt:message key ="add"/>
+			</button>
 			<br>
 		</form>
 	</c:if>	

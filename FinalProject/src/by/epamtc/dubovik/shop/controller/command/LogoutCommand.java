@@ -11,10 +11,12 @@ import by.epamtc.dubovik.shop.controller.Page;
 public class LogoutCommand implements ActionCommand {
 
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void execute(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		request.getSession().invalidate();
 		String page = Page.INDEX;
-		request.getRequestDispatcher(page).forward(request, response);
+
+		response.sendRedirect(request.getContextPath() + page);
 	}
 
 }

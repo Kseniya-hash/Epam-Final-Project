@@ -12,6 +12,7 @@ public class ProductForCart implements Serializable {
 	private int rating;
 	private int sellingPrice;
 	private int quantity;
+	private String photoPath;
 	
 	public ProductForCart() {}
 	
@@ -62,6 +63,14 @@ public class ProductForCart implements Serializable {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	
+	public String getPhotoPath() {
+		return photoPath;
+	}
+	
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -77,7 +86,8 @@ public class ProductForCart implements Serializable {
 			Objects.equals(this.productCategory, other.getProductCategory()) &&
 			this.rating == other.getRating() &&
 			this.sellingPrice == other.getSellingPrice() &&
-					this.quantity == other.getQuantity()) {
+			this.quantity == other.getQuantity() &&
+			Objects.equals(this.photoPath, other.getPhotoPath())) {
 			return true;
 		}
 		return false;
@@ -93,6 +103,7 @@ public class ProductForCart implements Serializable {
 		result = result * prime + rating;
 		result = result * prime + sellingPrice;
 		result = result * prime + quantity;
+		result = result * prime + Objects.hashCode(photoPath);
 		return result;
 	}
 
@@ -104,7 +115,8 @@ public class ProductForCart implements Serializable {
 		result.append(productCategory + ",");
 		result.append(rating + ",");
 		result.append(sellingPrice + ",");
-		result.append(quantity);
+		result.append(quantity + ",");
+		result.append(photoPath);
 		return result.toString();
 	}
 

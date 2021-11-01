@@ -10,6 +10,11 @@ public class ProductCategory implements Serializable {
 	private String name;
 
 	public ProductCategory() {};
+	
+	public ProductCategory(long id, String name) {
+		this.id = id;
+		this.name = name;
+	};
 
 	public long getId() {
 		return id;

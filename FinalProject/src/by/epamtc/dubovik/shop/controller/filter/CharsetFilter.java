@@ -11,13 +11,14 @@ import javax.servlet.ServletResponse;
 
 public class CharsetFilter implements Filter {
 
-	private final static String CHARACTER_ENCODING = "characterEndoding";
+	private final static String CHARACTER_ENCODING = "characterEnсoding";
 	private String encoding;
 	
 	public CharsetFilter() {}
 	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			throws IOException, ServletException {
+		
 		request.setCharacterEncoding(encoding);
 		response.setCharacterEncoding(encoding);
 		

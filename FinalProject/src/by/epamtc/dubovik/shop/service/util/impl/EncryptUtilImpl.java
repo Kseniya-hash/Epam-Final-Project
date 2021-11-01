@@ -15,10 +15,10 @@ public class EncryptUtilImpl implements EncryptUtil {
 	
 	private final static String ALGORITHM = "MD5";
 	private final static int SALT_LENGTH = 16;
-	private final static int SECURE_RANDOM_LENGTH = 32;
 
 	@Override
-	public byte[] incryptPassword(byte[] password) throws ServiceException {
+	public byte[] incryptPassword(byte[] password) 
+			throws ServiceException {
 		byte[] incrypted = null;
 		SecureRandom random = new SecureRandom();
 		byte[] salt = new byte[SALT_LENGTH];
@@ -28,7 +28,8 @@ public class EncryptUtilImpl implements EncryptUtil {
 	}
 
 	@Override
-	public boolean cheakPassword(byte[] plain, byte[] encrypted) throws ServiceException {
+	public boolean cheakPassword(byte[] plain, byte[] encrypted) 
+			throws ServiceException {
 		Decoder decoder = Base64.getDecoder();
 		byte[] decoded = decoder.decode(encrypted);
 		byte[] salt = new byte[SALT_LENGTH];
@@ -37,7 +38,8 @@ public class EncryptUtilImpl implements EncryptUtil {
 		return Arrays.equals(encrypted,plain);
 	}
 	
-	private byte[] incryptPassword(byte[] password, byte[] salt) throws ServiceException {
+	private byte[] incryptPassword(byte[] password, byte[] salt) 
+			throws ServiceException {
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance(ALGORITHM);
@@ -59,13 +61,18 @@ public class EncryptUtilImpl implements EncryptUtil {
 	}
 	
 	private byte[] addSaltToPassword(byte[] password, byte[] salt) {
-		byte[] passwordWithSalt = new byte[password.length + salt.length];
+		byte[] passwordWithSalt = 
+				new byte[password.length + salt.length];
 		copyBytes(passwordWithSalt, password, 0, 0, password.length);
 		copyBytes(passwordWithSalt, salt, password.length, 0, salt.length);
 		return passwordWithSalt;
 	}
 	
-	private void copyBytes(byte[] receiver, byte[] source, int startReceiver, int startSource, int count) {
+	private void copyBytes(byte[] receiver, 
+							byte[] source, 
+							int startReceiver, 
+							int startSource, 
+							int count) {
 		for(int i = 0; i < count; i++) {
 			if(receiver.length - startReceiver > i) {
 				receiver[startReceiver + i] = source[startSource + i];
@@ -77,14 +84,6 @@ public class EncryptUtilImpl implements EncryptUtil {
 	public long takeSecureRandom() {
 		SecureRandom random = new SecureRandom();
 		long secureRandom = random.nextLong();
-		//byte[] secureRandom = takeSecureRandom(SECURE_RANDOM_LENGTH);
-		return secureRandom;// new String(secureRandom);
-	}
-	
-	private byte[] takeSecureRandom(int length) {
-		SecureRandom random = new SecureRandom();
-		byte[] secureRandom = new byte[length];
-		random.nextBytes(secureRandom);
 		return secureRandom;
 	}
 }

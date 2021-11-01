@@ -6,7 +6,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <title>
 	<fmt:bundle basename="resources.pagecontent" prefix="header.">
@@ -26,23 +27,33 @@
 					<fmt:message key="ordernumber"/>
 					<c:out value="${ elem.id }"/><br/>
 					<fmt:message key="orderdate"/>
-					<fmt:parseDate value="${ elem.date }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
-					<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDate }"/><br/>
+					<fmt:parseDate value="${ elem.date }" 
+							pattern="yyyy-MM-dd'T'HH:mm" 
+							var="parsedDate" 
+							type="both"/>
+					<fmt:formatDate pattern="dd.MM.yyyy HH:mm" 
+							value="${ parsedDate }"/><br/>
 					<c:out value="${ elem.userLogin }"/><br/>
 					<c:out value="${ elem.userPhone }"/><br/>
 					<p class="text-danger font-weight-bold">
-						<fmt:message key="status"/> <c:out value="${ elem.orderStatus }"/>
+						<fmt:message key="status"/>
+						<c:out value="${ elem.orderStatus }"/>
 					</p><br/>
 					<c:forEach var="sale" items="${ elem.sales }">
-						<c:url value ="Controller?command=show_product&product_id=${ sale.productId }" var="productUrl"/>
-						<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ sale.productName }"/></a><br/>
+						<c:url value ="Controller?command=show_product&product_id=${ sale.productId }" 
+								var="productUrl"/>
+						<a href ='<c:out value="${ productUrl }"/>'>
+						<c:out value="${ sale.productName }"/></a><br/>
 						<div class="row">
 							<div class="col-md-5">
-								<fmt:message key="ordered"/> <c:out value="${ sale.quantity }"/>
+								<fmt:message key="ordered"/> 
+								<c:out value="${ sale.quantity }"/>
 							</div>
 							<div class="col-md-5">
 								<fmt:message key="price"/>
-								<fmt:formatNumber value="${ sale.price/100 }" type="currency"/>
+								<fmt:formatNumber value="${ sale.price/100 }" 
+									type="currency" 
+									currencyCode ="BYR"/>
 							</div>
 							</br>
 							</br>

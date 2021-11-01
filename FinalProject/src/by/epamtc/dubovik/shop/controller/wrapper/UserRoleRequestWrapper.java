@@ -3,9 +3,9 @@ package by.epamtc.dubovik.shop.controller.wrapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import by.epamtc.dubovik.shop.controller.util.RequestUtil;
+import by.epamtc.dubovik.shop.controller.util.RequestUtilFactory;
 import by.epamtc.dubovik.shop.entity.UserLogged;
-import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
-import by.epamtc.dubovik.shop.service.util.RequestUtil;
 
 public class UserRoleRequestWrapper extends HttpServletRequestWrapper {
 	
@@ -19,7 +19,7 @@ public class UserRoleRequestWrapper extends HttpServletRequestWrapper {
 
 	@Override
 	public boolean isUserInRole(String role) {
-		RequestUtil requestUtil = ServiceFactory.getInstance().getRequestUtil();
+		RequestUtil requestUtil = RequestUtilFactory.getInstance().getRequestUtil();
 		UserLogged user = requestUtil.takeUserLogged(realRequest);
 		
 		boolean isInRole = false;

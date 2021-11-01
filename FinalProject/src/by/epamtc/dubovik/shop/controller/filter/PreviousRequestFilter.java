@@ -12,17 +12,25 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import by.epamtc.dubovik.shop.controller.Page;
 import by.epamtc.dubovik.shop.controller.ParameterName;
 
 public class PreviousRequestFilter implements Filter {
 	
-	private final String GET = "GET";
+	private final static String GET = "GET";
 
-	public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain) 
+			throws IOException, ServletException {
+		
 		HttpServletRequest request = (HttpServletRequest)req;
 		
 		HttpSession session = request.getSession();
 		String previousUrl = (String)session.getAttribute(ParameterName.CURRENT_URL);
+		
+		if(previousUrl == null) {
+			previousUrl = Page.INDEX;
+		}
+		
 		session.setAttribute(ParameterName.PREVIOS_URL, previousUrl);
 		
 		if(GET.equals(request.getMethod())) {

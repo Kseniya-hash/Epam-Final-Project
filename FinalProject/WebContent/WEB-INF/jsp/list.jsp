@@ -7,7 +7,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <title>
 
@@ -50,11 +51,14 @@
 		<c:forEach var="elem" items="${ products }">
 			<div class="row">
 				<div class="col-md-3">
-					<img src="${ elem.photoPath }" class="img-fluid" alt="product photo">
+					<img src="images${ elem.photoPath }" class="img-fluid" alt="product photo">
 				</div>
 				<div class="col-md-7">
 				
-					<c:url value ="Controller?command=show_product&product_id=${ elem.id }" var="productUrl"/>
+					<c:url value ="Controller" var="productUrl">
+						<c:param name = "command" value = "show_product"/>
+						<c:param name = "product_id" value = "${ elem.id }"/>
+					</c:url>
 					<a href ='<c:out value="${ productUrl }"/>'><c:out value="${ elem.name }"/></a><br/>
 					<c:out value="${ elem.productCategory }"/><br/>
 					<c:out value="${ fn:substring(elem.description, 0, 100)}..."/><br/>
@@ -65,7 +69,9 @@
     					<img src="images/star.png" class="img-fluid" alt="${ elem.rating }">
     				</c:forEach><br/>
 						<fmt:message key="price"/>
-					<c:out value="${ elem.sellingPrice / 100 }"/><br/>
+					<fmt:formatNumber value="${ elem.sellingPrice/100 }" 
+									type="currency"
+									currencyCode ="BYR"/>
 				</div>
 				<div class="col-md-2">
     				</br>

@@ -6,17 +6,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import by.epamtc.dubovik.shop.controller.Page;
 import by.epamtc.dubovik.shop.controller.ParameterName;
+import by.epamtc.dubovik.shop.controller.util.MessageManager;
+import by.epamtc.dubovik.shop.controller.util.RequestUtilFactory;
 import by.epamtc.dubovik.shop.entity.User;
 import by.epamtc.dubovik.shop.service.exception.InvalidException;
 import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.exception.UserAlreadyExistException;
-import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
+import by.epamtc.dubovik.shop.service.ServiceFactory;
 import by.epamtc.dubovik.shop.service.UserService;
-import by.epamtc.dubovik.shop.service.resource.MessageManager;
 
 public class RegistrationCommand implements ActionCommand {
+	
+	private static Logger logger = LogManager.getLogger();
 
 	private final static String REGISTRATION_ERROR = "modal.registrationerror";
 	private final static String USER_EXIST_ERROR = "modal.userexisterror";
@@ -25,14 +31,17 @@ public class RegistrationCommand implements ActionCommand {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		
 		String page = Page.REGISTRATION;
 		User user = new User();
 		takeUserParamsFromRequest(request, user);
-		byte[] passwordRepeat = request.getParameter(ParameterName.PASSWORD_REPEAT).getBytes();
+		byte[] passwordRepeat = request
+				.getParameter(ParameterName.PASSWORD_REPEAT).getBytes();
 		
-		ServiceFactory factory = ServiceFactory.getInstance();
-		UserService registerLogic = factory.getUserService();
-		MessageManager messageManager = factory.getMessageManager();
+		UserService registerLogic = 
+				ServiceFactory.getInstance().getUserService();
+		MessageManager messageManager = 
+				RequestUtilFactory.getInstance().getMessageManager();
 		
 		boolean registerFlag = false;
 		String messageForModal = null;
@@ -44,16 +53,23 @@ public class RegistrationCommand implements ActionCommand {
 				messageForModal = REGISTRATION_ERROR;
 			}
 		} catch (ServiceException e) {
+			logger.error(e);
+			
 			page = Page.ERROR500;
 		} catch (UserAlreadyExistException e) {
+			logger.error(e);
+			
 			messageForModal = USER_EXIST_ERROR;
 		} catch (InvalidException e) {
+			logger.error(e);
+			
 			messageForModal = INVALID_REGISTRATION_ERROR;
 		}
 		if(messageForModal != null) {
 			request.setAttribute(ParameterName.MODAL_MESSAGE, 
 					messageManager.getProperty(messageForModal, response.getLocale()));
 		}
+		
 		request.getRequestDispatcher(page).forward(request, response);
 	}
 	

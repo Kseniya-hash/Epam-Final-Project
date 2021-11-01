@@ -16,9 +16,27 @@ public class OrderForView implements Serializable {
 	private boolean isBlacklisted;
 	private LocalDateTime date;
 	private String orderStatus;
-	private List<OrderToProductForView> sales;
+	private List<SaleForView> sales;
 	
 	public OrderForView() {}
+	
+	public OrderForView(long id,
+				long userId,
+				String userLogin,
+				String userPhone,
+				boolean isBlacklisted,
+				LocalDateTime date,
+				String orderStatus,
+				List<SaleForView> sales) {
+		this.id = id;
+		this.userId = userId;
+		this.userLogin = userLogin;
+		this.userPhone = userPhone;
+		this.isBlacklisted = isBlacklisted;
+		this.date = date;
+		this.orderStatus = orderStatus;
+		this.sales = sales;
+	}
 	
 	public long getId() {
 		return id;
@@ -76,11 +94,11 @@ public class OrderForView implements Serializable {
 		this.orderStatus = orderStatus;
 	}
 
-	public List<OrderToProductForView> getSales() {
+	public List<SaleForView> getSales() {
 		return sales;
 	}
 	
-	public void setSales(List<OrderToProductForView> sales) {
+	public void setSales(List<SaleForView> sales) {
 		this.sales = sales;
 	}
 	

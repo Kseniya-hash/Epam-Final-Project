@@ -23,27 +23,63 @@
 				<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
 				<input type="hidden" name="command" value="registration"/>
 				${ errorRegistrationMessage }<br/>
-				<label><fmt:message key="phonenumber"/></label><br/>
-				<input type="text" class="form-control" name="phone" pattern="^([0-9]){12}$" required value=""/><br/>
-				<label><fmt:message key="login"/></label><br/>
-				<input type="text" class="form-control" name="login" required value=""/><br/>
-				<label><fmt:message key="password"/></label><br/>
-				<input type="password" class="form-control" name="password" required 
-				attern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+-=|]).{8,20}$"
-				value=""/>
+				<label>
+					<fmt:message key="phonenumber"/>
+				</label><br/>
+				<input type="text" 
+						class="form-control" 
+						name="phone" 
+						pattern="^([0-9]){12}$" 
+						required 
+						value="${ param.phone }"/><br/>
+				<label>
+					<fmt:message key="login"/>
+				</label><br/>
+				<input type="text" 
+						class="form-control" 
+						name="login" 
+						required 
+						value="${ param.login }"/><br/>
+				<label>
+					<fmt:message key="password"/>
+				</label><br/>
+				<input type="password" 
+						class="form-control" 
+						name="password" 
+						required 
+						pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+\-=|]).{8,20}$"
+						value="${ password }"/>
 				<small class="text-muted">
-				<fmt:message key="passwordhint"/>
-				 <br/>
+					<fmt:message key="passwordhint"/><br/>
 				</small><br/>
-				<label><fmt:message key="passwordrepeat"/></label><br/>
-				<input type="password" class="form-control" name="passwordrepeat" required
-				pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+-=|]).{8,20}$"
-				value=""/><br>
-				<label><fmt:message key="name"/></label><br/>
-				<input type="text" class="form-control" name="name" required value=""/><br/>
-				<label><fmt:message key="email"/></label><br/>
-				<input type="text" class="form-control" name="email" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+\-=|]).{8,20}$" value=""/><br/>
-				<button type="submit" class="btn btn-primary"><fmt:message key="register"/></button></br>
+				<label>
+					<fmt:message key="passwordrepeat"/>
+				</label><br/>
+				<input type="password" 
+						class="form-control" 
+						name="passwordrepeat" 
+						required
+						pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+\-=|]).{8,20}$"
+						value="${ passwordrepeat }"/><br>
+				<label>
+					<fmt:message key="name"/>
+				</label><br/>
+				<input type="text" 
+						class="form-control" 
+						name="name" 
+						required 
+						value="${ param.name }"/><br/>
+				<label>
+					<fmt:message key="email"/>
+				</label><br/>
+				<input type="text" 
+						class="form-control" 
+						name="email" 
+						pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[\]:;<>,.?\/\\~_+\-=|]).{8,20}$" 
+						value="${ param.email }"/><br/>
+				<button type="submit" class="btn btn-primary">
+					<fmt:message key="register"/>
+				</button></br>
 			</form>
 		</div>
 	</div>

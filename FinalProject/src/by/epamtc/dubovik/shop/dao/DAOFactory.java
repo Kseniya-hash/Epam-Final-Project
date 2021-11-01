@@ -1,6 +1,5 @@
-package by.epamtc.dubovik.shop.dao.factory;
+package by.epamtc.dubovik.shop.dao;
 
-import by.epamtc.dubovik.shop.dao.*;
 import by.epamtc.dubovik.shop.dao.jdbcimpl.*;
 
 public class DAOFactory {
@@ -16,7 +15,6 @@ public class DAOFactory {
 	private final ProductForCartDAO productForCartDAO;
 	private final PriceDAO priceDAO;
 	private final OrderForViewDAO orderForViewDAO;
-	
 	
 	private DAOFactory() {
 		commentDAO = new CommentJDBC();

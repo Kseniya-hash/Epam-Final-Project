@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--  <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">-->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -15,7 +15,6 @@
 <fmt:requestEncoding value="UTF-8"/>
 <c:import url="fragment\header.jsp" charEncoding="utf-8"/>
 
-<!-- Modal -->
 <div class="modal fade" 
 		id="add_category" 
 		tabindex="-1" role="dialog" 
@@ -25,7 +24,9 @@
     	<div class="modal-content">
     		<form name="AddCategory" method="POST" action="Controller">
       			<div class="modal-header">
-        			<h3 class="modal-title" id="exampleModalLabel">Добавить категорию</h3>
+        			<h3 class="modal-title" id="exampleModalLabel">
+        				<fmt:message key="addcategory"/>
+        			</h3>
       			</div>
       			<div class="modal-body">
 					<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
@@ -33,8 +34,12 @@
 					<input type="text" class="form-control" name="product_category">
     			</div>
     			<div class="modal-footer">
-        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-        			<button type="submit" class="btn btn-primary">Добавить</button>
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">
+        				<fmt:message key="cancel"/>
+        			</button>
+        			<button type="submit" class="btn btn-primary">
+        				<fmt:message key="add"/>
+        			</button>
       			</div>
       		</form>
     	</div>
@@ -42,7 +47,7 @@
 </div>
 
 <div class="container">
-	<form name="ShowProductForm" method="POST" action="Controller">
+	<form name="ShowProductForm" method="POST" action="Controller" enctype="multipart/form-data">
 		<input type="hidden" name="csrf_tokin" value="${ csrf_tokin }">
 		<input type="hidden" name="command" value="${ command }"/>
 		<input type="hidden" name="product_id" value="${ product.id }"/>
@@ -54,7 +59,8 @@
 				required 
 				value="${ product.name }"/><br/>
 				
-			Категория товара:
+			<fmt:message key="productcategory"/>
+			
 			<select class="form-control" name="product_category" required>
 				<c:forEach var="category" items="${ categories }" >
 					<c:choose>
@@ -71,13 +77,14 @@
 					</c:choose>
 				</c:forEach>
 			</select>
+			
 			<div class="row" align="right">
 				<div class="col-md-12">
 					<button type="button" 
 						class="btn btn-secondary btm-sm" 
 						data-toggle="modal" 
 						data-target="#add_category">
-  						Добавить категорию
+  						<fmt:message key="add"/>
 					</button>
 			 	</div>
 			</div>
@@ -128,31 +135,19 @@
 				</div>
 			</div>
 			
-			<div class = "row" align="center">
-				<div class="col-md-4">
-					<img src="${ product.photoPath }" 
-					id="current_photo" 
-					class="img-fluid" 
-					alt="product photo">
+			<div class = "row">
+				<div class="col-md-6">
+					<fmt:message key="chooseanotherpicture"/>
 				</div>
-				<div class="col-md-8">
-					Выбрать другую картинку:<br><br>
-					
+				<div class="col-md-6">
 					<input type="file" 
 					id="new_photo"
 					class="form-control-file" 
 					name="product_photo" 
-					accept=".jpg,.png,.jpeg,.gif"
-					onchange="handleFiles(this.files)">
+					accept=".jpg,.png,.jpeg,.gif">
 				</div>
 			</div>
 			
-			<script>
-				inputElement.addEventListener("change", handleFiles, false);
-				function handleFiles() {
-					document.getElementById('current_photo').src = document.getElementById('new_photo').value;
-				}
-			</script>
 			<fmt:message key="description"/>
 			<textarea class="form-control" 
 				id="product_description" 
@@ -168,7 +163,7 @@
 						class="form-control" 
 						id="product_weight" 
 						name="product_weight" 
-						min="0" 
+						min="1" 
 						step="1" 
 						value="${ product.weight }"/><br/>
 				</div>
@@ -182,7 +177,7 @@
 						class="form-control" 
 						id="product_length" 
 						name="product_length" 
-						min="0" 
+						min="1" 
 						step="1" 
 						value="${ product.length }"/><br/>
 				</div>
@@ -196,7 +191,7 @@
 						class="form-control" 
 						id="product_high" 
 						name="product_high" 
-						min="0" 
+						min="1" 
 						step="1" 
 						value="${ product.high }"/><br/>
 				</div>
@@ -210,7 +205,7 @@
 						class="form-control" 
 						id="product_width" 
 						name="product_width" 
-						min="0" 
+						min="1" 
 						step="1" 
 						value="${ product.width }"/><br/>
 				</div>

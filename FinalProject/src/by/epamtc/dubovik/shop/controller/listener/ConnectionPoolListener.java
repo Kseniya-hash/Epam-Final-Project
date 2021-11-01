@@ -3,7 +3,7 @@ package by.epamtc.dubovik.shop.controller.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import by.epamtc.dubovik.shop.connectionpool.ConnectionPool;
+import by.epamtc.dubovik.shop.dao.connectionpool.ConnectionPool;
 
 public class ConnectionPoolListener implements ServletContextListener {
 

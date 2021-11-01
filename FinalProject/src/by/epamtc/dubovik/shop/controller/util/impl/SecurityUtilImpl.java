@@ -1,22 +1,25 @@
-package by.epamtc.dubovik.shop.service.util.impl;
+package by.epamtc.dubovik.shop.controller.util.impl;
 
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
-import by.epamtc.dubovik.shop.service.util.SecurityConfig;
-import by.epamtc.dubovik.shop.service.util.SecurityUtil;
+import by.epamtc.dubovik.shop.controller.util.RequestUtilFactory;
+import by.epamtc.dubovik.shop.controller.util.SecurityConfig;
+import by.epamtc.dubovik.shop.controller.util.SecurityUtil;
 
 public class SecurityUtilImpl  implements SecurityUtil {
 	
 	public boolean isProtectedCommand(HttpServletRequest request) {
-		boolean isProtected = false;
-		String command = ServiceFactory.getInstance().getRequestUtil().takeCommand(request);
-		SecurityConfig securityConfig = ServiceFactory.getInstance().getSecurityConfig();
+		RequestUtilFactory factory = RequestUtilFactory.getInstance();
+		
+		String command = factory.getRequestUtil().takeCommand(request);
+		SecurityConfig securityConfig = factory.getSecurityConfig();
 		Set<String> roles = securityConfig.getAllRoles();
 
+		boolean isProtected = false;
+		
 		for (String role : roles) {
 			List<String> commands = securityConfig.getCommandsForRole(role);
 			if (commands != null && commands.contains(command)) {
@@ -26,11 +29,11 @@ public class SecurityUtilImpl  implements SecurityUtil {
 		return isProtected;
 	}
 
-	// Проверить имеет ли данный 'request' подходящую роль?
 	public boolean hasPermission(HttpServletRequest request) {
-		//String urlPattern = UrlPatternUtils.getUrlPattern(request);
-		SecurityConfig securityConfig = ServiceFactory.getInstance().getSecurityConfig();
-		String command = ServiceFactory.getInstance().getRequestUtil().takeCommand(request);
+		RequestUtilFactory factory = RequestUtilFactory.getInstance();
+		
+		SecurityConfig securityConfig = factory.getSecurityConfig();
+		String command = factory.getRequestUtil().takeCommand(request);
 		
 		Set<String> allRoles = securityConfig.getAllRoles();
 

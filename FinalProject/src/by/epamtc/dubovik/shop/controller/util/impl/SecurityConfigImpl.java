@@ -1,4 +1,4 @@
-package by.epamtc.dubovik.shop.service.util.impl;
+package by.epamtc.dubovik.shop.controller.util.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import by.epamtc.dubovik.shop.controller.command.factory.CommandMapping;
-import by.epamtc.dubovik.shop.service.util.SecurityConfig;
+import by.epamtc.dubovik.shop.controller.util.SecurityConfig;
 
 public class SecurityConfigImpl implements SecurityConfig {
 

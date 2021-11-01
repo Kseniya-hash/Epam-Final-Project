@@ -5,7 +5,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
 <fmt:setLocale value="${ pageContext.response.locale }" scope="session"/>
 <title>
 	<fmt:bundle basename="resources.pagecontent" prefix="order.">
@@ -24,7 +25,9 @@
 			</div>
 			<div class="col-md-6">
 				<fmt:message key="orderprice"/>
-				<c:out value="${ price/100 }"/><br/>
+				<fmt:formatNumber value="${ price/100 }" 
+									type="currency" 
+									currencyCode ="BYR"/><br/>
 			</div>
 		</div>
 		<div class="row">
@@ -44,7 +47,8 @@
 			</div>
 			<div class="col-md-5">
 				<fmt:message key="price"/><fmt:message key="price"/>
-				<fmt:formatNumber value="${ sale.price/100 }" type="currency"/>
+				<fmt:formatNumber value="${ sale.price/100 }" 
+					type="currency" currencyCode ="BYR"/>
 			</div>
 			</br>
 			</br>

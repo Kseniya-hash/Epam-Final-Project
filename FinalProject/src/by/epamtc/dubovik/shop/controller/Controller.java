@@ -17,20 +17,27 @@ public class Controller extends HttpServlet {
         super();
     }
     
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		processRequest(request, response);
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		processRequest(request, response);
 	}
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
+		
 		ActionFactory factory = new ActionFactory();
 		ActionCommand command = factory.defineCommand(request);
-		command.execute(request, response);
+		
+		if(command != null) {
+			command.execute(request, response);
+		} else {
+			request.getRequestDispatcher(Page.ERROR404).forward(request, response);
+		}
 	}
 
 }

@@ -12,22 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import by.epamtc.dubovik.shop.controller.Page;
+import by.epamtc.dubovik.shop.controller.ParameterName;
+import by.epamtc.dubovik.shop.controller.command.factory.CommandMapping;
+import by.epamtc.dubovik.shop.controller.util.RequestUtil;
+import by.epamtc.dubovik.shop.controller.util.RequestUtilFactory;
+import by.epamtc.dubovik.shop.controller.util.SecurityUtil;
 import by.epamtc.dubovik.shop.controller.wrapper.UserRoleRequestWrapper;
 import by.epamtc.dubovik.shop.entity.UserLogged;
-import by.epamtc.dubovik.shop.service.factory.ServiceFactory;
-import by.epamtc.dubovik.shop.service.util.RequestUtil;
-import by.epamtc.dubovik.shop.service.util.SecurityUtil;
 
 public class SecurityFilter implements Filter {
 
-	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+			throws IOException, ServletException {
+		
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		
-		RequestUtil requestUtil = ServiceFactory.getInstance().getRequestUtil();
-		SecurityUtil securityUtil = ServiceFactory.getInstance().getSecurityUtil();
-		UserLogged loginedUser = requestUtil.takeUserLogged(request);
+		RequestUtilFactory factory = RequestUtilFactory.getInstance();
 		
+		RequestUtil requestUtil = factory.getRequestUtil();
+		SecurityUtil securityUtil = factory.getSecurityUtil();
+		UserLogged loginedUser = requestUtil.takeUserLogged(request);
 		HttpServletRequest wrapRequest = request;
 		if (loginedUser != null) {
 			wrapRequest = new UserRoleRequestWrapper(request);
@@ -37,7 +42,10 @@ public class SecurityFilter implements Filter {
 			
 			boolean hasPermission = securityUtil.hasPermission(wrapRequest);
 			if (!hasPermission) {
-				request.getRequestDispatcher(Page.LOGIN).forward(wrapRequest, response);
+				response.sendRedirect(request.getContextPath() + 
+						Page.CONTROLLER +"?" + 
+						ParameterName.COMMAND + "=" + 
+						CommandMapping.TO_LOGIN_PAGE);
 				return;
 			}
 		}

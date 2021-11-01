@@ -1,14 +1,31 @@
 package by.epamtc.dubovik.shop.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class OrderToProduct implements Serializable {
-	private static final long serialVersionUID = -395221761385286625L;
+public class SaleForView implements Serializable {
+
+	private static final long serialVersionUID = 2820851810081335537L;
+	
 	private long orderId;
 	private long productId;
+	private String productName;
 	private int quantity;
+	private int price;
 	
-	public OrderToProduct() {}
+	public SaleForView() {}
+	
+	public SaleForView(long orderId, 
+			long productId, 
+			String productName, 
+			int quantity, 
+			int price) {
+		this.orderId = orderId;
+		this.productId = productId;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.price = price;
+	}
 	
 	public long getOrderId() {
 		return orderId;
@@ -25,6 +42,14 @@ public class OrderToProduct implements Serializable {
 	public void setProductId(long productId) {
 		this.productId = productId;
 	}
+	
+	public String getProductName() {
+		return productName;
+	}
+	
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 
 	public int getQuantity() {
 		return quantity;
@@ -32,6 +57,14 @@ public class OrderToProduct implements Serializable {
 	
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	
+	public int getPrice() {
+		return price;
+	}
+	
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	@Override
@@ -42,10 +75,12 @@ public class OrderToProduct implements Serializable {
 			return false;
 		if(this.getClass() != o.getClass())
 			return false;
-		OrderToProduct other = (OrderToProduct)o;
+		SaleForView other = (SaleForView)o;
 		if(this.orderId == other.getOrderId() &&
 				this.productId == other.getProductId() &&
-				this.quantity == other.getQuantity()) {
+				Objects.equals(this.productName, other.getProductName()) &&
+				this.quantity == other.getQuantity() &&
+				this.price == other.getPrice()) {
 			return true;
 		}
 		return false;
@@ -57,7 +92,9 @@ public class OrderToProduct implements Serializable {
 		int prime = 31;
 		result = result * prime + (int)orderId;
 		result = result * prime + (int)productId;
+		result = result * prime + Objects.hashCode(productName);
 		result = result * prime + quantity;
+		result = result * prime + price;
 		return result;
 	}
 
@@ -66,8 +103,10 @@ public class OrderToProduct implements Serializable {
 		StringBuffer result = new StringBuffer(this.getClass().getName() + "@");
 		result.append(orderId + ",");
 		result.append(productId + ",");
-		result.append(quantity);
+		result.append(productName + ",");
+		result.append(quantity + ",");
+		result.append(price);
 		return result.toString();
 	}
-}
 
+}

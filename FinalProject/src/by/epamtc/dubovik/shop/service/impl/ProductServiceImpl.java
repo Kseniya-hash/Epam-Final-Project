@@ -1,18 +1,21 @@
 package by.epamtc.dubovik.shop.service.impl;
 
 import by.epamtc.dubovik.shop.dao.DAOException;
+import by.epamtc.dubovik.shop.dao.DAOFactory;
 import by.epamtc.dubovik.shop.dao.ProductDAO;
-import by.epamtc.dubovik.shop.dao.factory.DAOFactory;
 import by.epamtc.dubovik.shop.entity.Product;
 import by.epamtc.dubovik.shop.service.ProductService;
+import by.epamtc.dubovik.shop.service.exception.InvalidException;
 import by.epamtc.dubovik.shop.service.exception.ServiceException;
 import by.epamtc.dubovik.shop.service.validation.ProductValidation;
-import by.epamtc.dubovik.shop.service.validation.factory.ValidationFactory;
+import by.epamtc.dubovik.shop.service.validation.ValidationFactory;
 
 public class ProductServiceImpl implements ProductService {
 
 	@Override
-	public Product takeProductInfo(long productId) throws ServiceException {
+	public Product findProductInfo(long productId) 
+			throws ServiceException {
+		
 		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
 		Product product = null;
 		try {
@@ -24,7 +27,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public Product takeProductInfo(String productName) throws ServiceException {
+	public Product findProductInfo(String productName) 
+			throws ServiceException {
+		
 		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
 		Product product = null;
 		try {
@@ -36,33 +41,46 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public boolean redactProductInfo(Product product) throws ServiceException {
-		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
-		ProductValidation validator = ValidationFactory.getInstance().getProductValidation();
+	public boolean updateProductInfo(Product product) 
+			throws InvalidException, ServiceException {
+		
+		ProductDAO productDAO = 
+				DAOFactory.getInstance().getProductDAO();
+		ProductValidation validator = ValidationFactory.getInstance()
+				.getProductValidation();
 		boolean isRedacted = false;
-		if(validator.isValid(product)) {
-			try {
-				isRedacted = productDAO.update(product);
-			} catch (DAOException e) {
-				throw new ServiceException(e);
-			}
+		
+		if(!validator.isValid(product)) {
+			throw new InvalidException("Invalid product");
 		}
+		
+		try {
+			isRedacted = productDAO.update(product);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		
 		return isRedacted;
 	}
 
 	@Override
-	public boolean createProduct(Product product) throws ServiceException {
+	public boolean createProduct(Product product) 
+			throws InvalidException, ServiceException {
 		ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
-		ProductValidation validator = ValidationFactory.getInstance().getProductValidation();
+		ProductValidation validator = ValidationFactory.getInstance()
+				.getProductValidation();
 		boolean isCreated = false;
-		if(validator.isValid(product)) {
-			try {
-				isCreated = productDAO.create(product);
-			} catch (DAOException e) {
-				throw new ServiceException(e);
-			}
+		
+		if(!validator.isValid(product)) {
+			throw new InvalidException("Invalid product");
 		}
+		
+		try {
+			isCreated = productDAO.create(product);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		
 		return isCreated;
 	}
-
 }

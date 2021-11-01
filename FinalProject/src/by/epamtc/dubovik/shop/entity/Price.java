@@ -1,6 +1,8 @@
 package by.epamtc.dubovik.shop.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Price implements Serializable {
 	private static final long serialVersionUID = -732980308948139035L;
@@ -8,9 +10,18 @@ public class Price implements Serializable {
 	private long productId;
 	private int purchasePrice;
 	private int sellingPrice;
+	private LocalDateTime date;
 
 	public Price() {};
 
+	public Price(long id, long productId, int purchasePrice, int sellingPrice, LocalDateTime date) {
+		this.id = id;
+		this.productId = productId;
+		this.purchasePrice = purchasePrice;
+		this.sellingPrice = sellingPrice;
+		this.date = date;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -43,6 +54,14 @@ public class Price implements Serializable {
 		this.sellingPrice = sellingPrice;
 	}
 	
+	public LocalDateTime getDate() {
+		return date;
+	}
+	
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if(this == o)
@@ -55,7 +74,8 @@ public class Price implements Serializable {
 		if(	this.id == other.getId() &&
 			this.productId == other.getProductId() &&
 			this.purchasePrice == other.getPurchasePrice() &&
-			this.sellingPrice == other.getSellingPrice()) {
+			this.sellingPrice == other.getSellingPrice() &&
+			Objects.equals(this.date, other.getDate())) {
 			return true;
 		}
 		return false;
@@ -69,6 +89,7 @@ public class Price implements Serializable {
 		result = result * prime + (int)productId;
 		result = result * prime + purchasePrice;
 		result = result * prime + sellingPrice;
+		result = result * prime + Objects.hashCode(date);
 		return result;
 	}
 
@@ -78,7 +99,8 @@ public class Price implements Serializable {
 		result.append(id + ",");
 		result.append(productId + ",");
 		result.append(purchasePrice + ",");
-		result.append(sellingPrice);
+		result.append(sellingPrice + ",");
+		result.append(date);
 		return result.toString();
 	}
 }

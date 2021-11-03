@@ -71,6 +71,7 @@ public class MultipartFilter implements Filter {
     private void processFormField(FileItem formField, 
     		Map<String, String[]> parameterMap, 
     		String encoding) {
+    	
         String name = formField.getFieldName();
         String value;
         String[] values;

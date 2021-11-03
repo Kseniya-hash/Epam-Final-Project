@@ -99,7 +99,7 @@ public class ProductJDBC implements ProductDAO {
 			st.setString(9, entity.getPhotoPath());
 			int result = st.executeUpdate();
 			flag = result > 0;
-		} catch(SQLException | IOException e) {
+		} catch(SQLException e) {
 			throw new DAOException(e);
 		}
 		return flag;
@@ -127,7 +127,7 @@ public class ProductJDBC implements ProductDAO {
 			st.setLong(10, entity.getId());
 			int result = st.executeUpdate();
 			flag = result > 0;
-		} catch(SQLException | IOException e) {
+		} catch(SQLException e) {
 			throw new DAOException(e);
 		}
 		return flag;
@@ -153,8 +153,7 @@ public class ProductJDBC implements ProductDAO {
 		return product;
 	}
 	
-	private boolean uploadPhoto(Product product) 
-			throws IOException {
+	private boolean uploadPhoto(Product product) throws DAOException {
 		boolean isUploaded = false;
     	
 		String photoPath = product.getPhotoPath();
@@ -162,7 +161,17 @@ public class ProductJDBC implements ProductDAO {
     	if(photoPath != null && photoPath.length() != 0 && 
     			product.getPhotoContent() != null) {
     		File targetFile = new File(photoPath);
-    		FileUtils.copyInputStreamToFile(product.getPhotoContent(), targetFile);
+    		try {
+				FileUtils.copyInputStreamToFile(product.getPhotoContent(), targetFile);
+			} catch (IOException e) {
+				throw new DAOException(e);
+			} finally {
+				try {
+					product.getPhotoContent().close();
+				} catch (IOException e) {
+					throw new DAOException(e);
+				}
+			}
     		String photoName = photoPath.substring(photoPath.lastIndexOf("\\"));
     		product.setPhotoPath(photoName);
     		isUploaded = true;
